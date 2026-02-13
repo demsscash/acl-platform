@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose:*)",
+      "Bash(npm run migration:run:*)",
+      "Bash(ls:*)",
+      "Bash(docker exec:*)",
+      "Bash(lsof:*)",
+      "Bash(psql:*)",
+      "Bash(PGPASSWORD=acl_password psql:*)",
+      "Bash(brew services stop:*)",
+      "Bash(launchctl list:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run seed:*)",
+      "Bash(curl:*)",
+      "Bash(npm run start:dev:*)",
+      "Bash(pkill:*)",
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)",
+      "Bash(find:*)",
+      "Bash(npm audit:*)",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtaW5AYWNsLnNuIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzcwMTI5NzQ3LCJleHAiOjE3NzAyMTYxNDd9.Lj4LNjvGHfEtJYkAKjARsNcDCcwwrV6OeALOqr9bjqs\")",
+      "Bash(__NEW_LINE_51d52f1d22d74f64__ echo \"=== Testing Camions Module ===\")",
+      "Bash(for:*)",
+      "Bash(do:*)",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtaW5BYUNsLnNuIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzcwMjE2OTQ2LCJleHAiOjE3NzAzMDMzNDZ9.cDk3MzlGZFNmdVB2Q0ZDbWF6XzgyOXBpZ3V6WV9SQWRRVnRwdmpDdkpN\")",
+      "Bash(__NEW_LINE_4b9a1f9d0bbbdccc__ echo \"=== TEST CARBURANT APPROVISIONNEMENTS ===\")",
+      "Bash(chmod:*)"
+    ]
+  }
+}

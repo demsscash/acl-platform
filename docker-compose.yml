@@ -1,0 +1,80 @@
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: acl-db
+    environment:
+      POSTGRES_USER: acl_user
+      POSTGRES_PASSWORD: acl_password
+      POSTGRES_DB: acl_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U acl_user -d acl_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and job queues
+  redis:
+    image: redis:7-alpine
+    container_name: acl-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # NestJS Backend API
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: acl-api
+    environment:
+      - NODE_ENV=development
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=acl_user
+      - DATABASE_PASSWORD=acl_password
+      - DATABASE_NAME=acl_db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=your_super_secret_jwt_key_change_in_production
+      - JWT_EXPIRES_IN=1d
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - uploads_data:/app/uploads
+
+  # React Frontend (development)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: acl-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3000/api
+
+volumes:
+  postgres_data:
+  redis_data:
+  uploads_data:

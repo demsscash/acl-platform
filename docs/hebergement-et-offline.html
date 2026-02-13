@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACL Platform - Hébergement & Mode Offline</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.7;
+      color: #1f2937;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .header .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #F5B800 0%, #e5a800 100%);
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: bold;
+      color: #1f2937;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(245, 184, 0, 0.3);
+    }
+    .header h1 {
+      font-size: 32px;
+      color: #1f2937;
+      margin-bottom: 10px;
+    }
+    .header p {
+      color: #6b7280;
+      font-size: 18px;
+    }
+    .section {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f3f4f6;
+    }
+    .section-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .icon-cloud { background: #dbeafe; }
+    .icon-offline { background: #d1fae5; }
+    .icon-arch { background: #fef3c7; }
+    .section-header h2 {
+      font-size: 22px;
+      color: #1f2937;
+    }
+    .subsection {
+      margin-bottom: 25px;
+    }
+    .subsection:last-child { margin-bottom: 0; }
+    .subsection h3 {
+      font-size: 16px;
+      color: #374151;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .subsection h3::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: #F5B800;
+      border-radius: 2px;
+    }
+    p { margin-bottom: 12px; color: #4b5563; }
+
+    .option-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      transition: all 0.2s;
+    }
+    .option-card:hover {
+      border-color: #F5B800;
+      box-shadow: 0 4px 12px rgba(245, 184, 0, 0.15);
+    }
+    .option-card.recommended {
+      border-color: #F5B800;
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    }
+    .option-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .option-name {
+      font-weight: 600;
+      font-size: 18px;
+      color: #1f2937;
+    }
+    .option-price {
+      font-size: 14px;
+      color: #6b7280;
+      background: #f3f4f6;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .badge-yellow { background: #fef3c7; color: #92400e; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .pros, .cons {
+      font-size: 14px;
+    }
+    .pros li::before { content: '✓ '; color: #10b981; font-weight: bold; }
+    .cons li::before { content: '✗ '; color: #ef4444; font-weight: bold; }
+    ul { list-style: none; }
+    li { margin-bottom: 6px; }
+
+    .architecture {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 25px;
+      margin: 20px 0;
+    }
+    .arch-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .arch-box {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 15px 25px;
+      text-align: center;
+      min-width: 140px;
+    }
+    .arch-box.primary {
+      border-color: #F5B800;
+      background: #fffbeb;
+    }
+    .arch-box .name { font-weight: 600; color: #1f2937; }
+    .arch-box .tech { font-size: 12px; color: #6b7280; margin-top: 5px; }
+    .arch-arrow {
+      font-size: 24px;
+      color: #9ca3af;
+    }
+
+    .code-block {
+      background: #1f2937;
+      color: #e5e7eb;
+      border-radius: 10px;
+      padding: 20px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .code-block .comment { color: #6b7280; }
+    .code-block .command { color: #fbbf24; }
+    .code-block .string { color: #34d399; }
+
+    .timeline {
+      position: relative;
+      padding-left: 30px;
+      margin: 20px 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #e5e7eb;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -26px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      background: #F5B800;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px #F5B800;
+    }
+    .timeline-item h4 {
+      font-size: 15px;
+      color: #1f2937;
+      margin-bottom: 5px;
+    }
+    .timeline-item p {
+      font-size: 14px;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+    th {
+      background: #f3f4f6;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+    }
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    tr:hover { background: #f9fafb; }
+
+    .cost-summary {
+      background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin-top: 20px;
+    }
+    .cost-summary h3 {
+      color: #F5B800;
+      margin-bottom: 15px;
+    }
+    .cost-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #4b5563;
+    }
+    .cost-row:last-child { border: none; }
+    .cost-total {
+      font-size: 20px;
+      font-weight: bold;
+      color: #F5B800;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">A</div>
+      <h1>ACL Platform</h1>
+      <p>Guide d'Hébergement & Mode Offline</p>
+    </div>
+
+    <!-- SECTION 1: HÉBERGEMENT -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-cloud">☁️</div>
+        <h2>Options d'Hébergement</h2>
+      </div>
+
+      <div class="subsection">
+        <h3>Option 1 : VPS (Serveur Privé Virtuel)</h3>
+        <div class="option-card recommended">
+          <div class="option-header">
+            <span class="option-name">Hostinger / Contabo / DigitalOcean</span>
+            <span class="option-price">5-15€/mois</span>
+          </div>
+          <span class="badge badge-yellow">Recommandé pour ACL</span>
+          <span class="badge badge-green">Contrôle total</span>
+          <p>Un serveur Linux (Ubuntu) où vous installez tout : Node.js, PostgreSQL, Redis, Nginx.</p>
+          <div class="pros-cons">
+            <ul class="pros">
+              <li>Contrôle total du serveur</li>
+              <li>Pas de limite de ressources</li>
+              <li>Un seul coût mensuel</li>
+              <li>Données au Sénégal possible</li>
+            </ul>
+            <ul class="cons">
+              <li>Configuration manuelle</li>
+              <li>Maintenance à gérer</li>
+              <li>Backups à configurer</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="option-card">
+          <div class="option-header">
+            <span class="option-name">Railway / Render / Fly.io</span>
+            <span class="option-price">10-30€/mois</span>
+          </div>
+          <span class="badge badge-blue">PaaS - Facile</span>
+          <p>Plateformes "Platform as a Service" - vous poussez votre code, ils gèrent le reste.</p>
+          <div class="pros-cons">
+            <ul class="pros">
+              <li>Déploiement ultra simple</li>
+              <li>SSL automatique</li>
+              <li>Scaling automatique</li>
+              <li>Pas de maintenance serveur</li>
+            </ul>
+            <ul class="cons">
+              <li>Plus cher à l'échelle</li>
+              <li>Moins de contrôle</li>
+              <li>Dépendance au provider</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="option-card">
+          <div class="option-header">
+            <span class="option-name">AWS / Google Cloud / Azure</span>
+            <span class="option-price">Variable (20-100€+/mois)</span>
+          </div>
+          <span class="badge badge-red">Complexe</span>
+          <p>Les "Big Cloud" - puissants mais complexes à configurer et à budgétiser.</p>
+          <div class="pros-cons">
+            <ul class="pros">
+              <li>Très scalable</li>
+              <li>Services managés (RDS, ElastiCache)</li>
+              <li>Haute disponibilité</li>
+            </ul>
+            <ul class="cons">
+              <li>Facturation complexe</li>
+              <li>Courbe d'apprentissage</li>
+              <li>Peut devenir très cher</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>Architecture de Déploiement Recommandée</h3>
+        <div class="architecture">
+          <div class="arch-diagram">
+            <div class="arch-box">
+              <div class="name">Utilisateurs</div>
+              <div class="tech">Navigateur / PWA</div>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box primary">
+              <div class="name">Nginx</div>
+              <div class="tech">Reverse Proxy + SSL</div>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box">
+              <div class="name">Frontend</div>
+              <div class="tech">Fichiers statiques</div>
+            </div>
+          </div>
+          <div class="arch-diagram">
+            <div class="arch-box primary">
+              <div class="name">Nginx</div>
+              <div class="tech">/api/*</div>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box">
+              <div class="name">Backend</div>
+              <div class="tech">NestJS :3000</div>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box">
+              <div class="name">PostgreSQL</div>
+              <div class="tech">Base de données</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+<span class="comment"># Exemple de déploiement sur VPS Ubuntu</span>
+
+<span class="comment"># 1. Installer les dépendances</span>
+<span class="command">sudo apt update && sudo apt install -y nodejs npm postgresql redis nginx</span>
+
+<span class="comment"># 2. Cloner le projet</span>
+<span class="command">git clone</span> <span class="string">https://github.com/votre-repo/acl-platform.git</span>
+
+<span class="comment"># 3. Configurer le backend</span>
+<span class="command">cd</span> acl-platform/backend
+<span class="command">cp</span> .env.example .env
+<span class="command">npm install && npm run build</span>
+
+<span class="comment"># 4. Lancer avec PM2 (process manager)</span>
+<span class="command">npm install -g pm2</span>
+<span class="command">pm2 start dist/main.js --name acl-api</span>
+
+<span class="comment"># 5. Build du frontend</span>
+<span class="command">cd</span> ../frontend
+<span class="command">npm install && npm run build</span>
+<span class="comment"># Copier dist/ vers /var/www/acl</span>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>Nom de Domaine & SSL</h3>
+        <table>
+          <tr>
+            <th>Service</th>
+            <th>Prix</th>
+            <th>Remarque</th>
+          </tr>
+          <tr>
+            <td><strong>Domaine .sn</strong> (NIC Sénégal)</td>
+            <td>~15 000 XOF/an</td>
+            <td>acl-transport.sn</td>
+          </tr>
+          <tr>
+            <td><strong>Domaine .com</strong> (Namecheap, Gandi)</td>
+            <td>~10€/an</td>
+            <td>acl-logistics.com</td>
+          </tr>
+          <tr>
+            <td><strong>Certificat SSL</strong></td>
+            <td>Gratuit</td>
+            <td>Let's Encrypt (auto-renouvelé)</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="cost-summary">
+        <h3>Estimation Budget Mensuel (VPS)</h3>
+        <div class="cost-row">
+          <span>VPS 4GB RAM (Hostinger/Contabo)</span>
+          <span>~10€</span>
+        </div>
+        <div class="cost-row">
+          <span>Domaine .sn (annualisé)</span>
+          <span>~2€</span>
+        </div>
+        <div class="cost-row">
+          <span>SSL Let's Encrypt</span>
+          <span>Gratuit</span>
+        </div>
+        <div class="cost-row">
+          <span>Backups (optionnel)</span>
+          <span>~3€</span>
+        </div>
+        <div class="cost-row">
+          <span class="cost-total">Total estimé</span>
+          <span class="cost-total">~15€/mois (~10 000 XOF)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: MODE OFFLINE -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-offline">📴</div>
+        <h2>Mode Offline (Hors Connexion)</h2>
+      </div>
+
+      <div class="subsection">
+        <h3>Comment ça marche ?</h3>
+        <p>ACL Platform utilise une architecture <strong>PWA (Progressive Web App)</strong> avec stockage local pour fonctionner sans Internet.</p>
+
+        <div class="architecture">
+          <div class="arch-diagram">
+            <div class="arch-box primary">
+              <div class="name">IndexedDB</div>
+              <div class="tech">Dexie.js</div>
+            </div>
+            <div class="arch-arrow">↔</div>
+            <div class="arch-box">
+              <div class="name">Application</div>
+              <div class="tech">React PWA</div>
+            </div>
+            <div class="arch-arrow">↔</div>
+            <div class="arch-box">
+              <div class="name">Service Worker</div>
+              <div class="tech">Cache API</div>
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <tr>
+            <th>Technologie</th>
+            <th>Rôle</th>
+            <th>Capacité</th>
+          </tr>
+          <tr>
+            <td><strong>IndexedDB</strong> (via Dexie.js)</td>
+            <td>Stocke les données localement</td>
+            <td>~50% du disque disponible</td>
+          </tr>
+          <tr>
+            <td><strong>Service Worker</strong></td>
+            <td>Cache les fichiers de l'app</td>
+            <td>L'app charge même sans réseau</td>
+          </tr>
+          <tr>
+            <td><strong>Background Sync</strong></td>
+            <td>Synchronise quand le réseau revient</td>
+            <td>File d'attente automatique</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="subsection">
+        <h3>Flux de Synchronisation</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <h4>1. Connexion disponible</h4>
+            <p>L'app télécharge les données fraîches du serveur et met à jour IndexedDB.</p>
+          </div>
+          <div class="timeline-item">
+            <h4>2. Perte de connexion</h4>
+            <p>L'app continue de fonctionner avec les données locales. Les modifications sont stockées en file d'attente.</p>
+          </div>
+          <div class="timeline-item">
+            <h4>3. Création/Modification offline</h4>
+            <p>Les nouvelles dotations carburant, sorties stock, etc. sont sauvegardées localement avec un flag "pending".</p>
+          </div>
+          <div class="timeline-item">
+            <h4>4. Retour de la connexion</h4>
+            <p>Le Service Worker détecte le réseau et envoie automatiquement les données en attente au serveur.</p>
+          </div>
+          <div class="timeline-item">
+            <h4>5. Résolution des conflits</h4>
+            <p>Le serveur traite les données avec timestamp. En cas de conflit, la dernière modification gagne (ou alerte l'utilisateur).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3>Données disponibles Offline</h3>
+        <table>
+          <tr>
+            <th>Module</th>
+            <th>Lecture Offline</th>
+            <th>Création Offline</th>
+            <th>Profils concernés</th>
+          </tr>
+          <tr>
+            <td>Camions</td>
+            <td><span class="badge badge-green">Oui</span></td>
+            <td><span class="badge badge-red">Non</span></td>
+            <td>Tous</td>
+          </tr>
+          <tr>
+            <td>Chauffeurs</td>
+            <td><span class="badge badge-green">Oui</span></td>
+            <td><span class="badge badge-red">Non</span></td>
+            <td>Tous</td>
+          </tr>
+          <tr>
+            <td>Dotations Carburant</td>
+            <td><span class="badge badge-green">Oui</span></td>
+            <td><span class="badge badge-green">Oui</span></td>
+            <td>MAGASINIER, COORDINATEUR</td>
+          </tr>
+          <tr>
+            <td>Sorties Stock Pièces</td>
+            <td><span class="badge badge-green">Oui</span></td>
+            <td><span class="badge badge-green">Oui</span></td>
+            <td>MAGASINIER</td>
+          </tr>
+          <tr>
+            <td>Bons Transport/Location</td>
+            <td><span class="badge badge-green">Oui</span></td>
+            <td><span class="badge badge-yellow">Partiel</span></td>
+            <td>COORDINATEUR</td>
+          </tr>
+          <tr>
+            <td>Dashboard / Stats</td>
+            <td><span class="badge badge-yellow">Cache</span></td>
+            <td>N/A</td>
+            <td>DIRECTION</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="subsection">
+        <h3>Installation comme Application</h3>
+        <p>Les utilisateurs peuvent "installer" ACL Platform sur leur téléphone ou PC :</p>
+        <div class="architecture">
+          <div class="arch-diagram">
+            <div class="arch-box">
+              <div class="name">Chrome/Edge</div>
+              <div class="tech">Menu → "Installer"</div>
+            </div>
+            <div class="arch-box">
+              <div class="name">Safari iOS</div>
+              <div class="tech">Partager → "Sur l'écran d'accueil"</div>
+            </div>
+            <div class="arch-box">
+              <div class="name">Android</div>
+              <div class="tech">Bannière auto ou menu</div>
+            </div>
+          </div>
+        </div>
+        <p>Une fois installée, l'app s'ouvre comme une application native, sans barre d'adresse du navigateur.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 3: RÉCAPITULATIF -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-arch">📋</div>
+        <h2>Récapitulatif & Prochaines Étapes</h2>
+      </div>
+
+      <div class="subsection">
+        <h3>Checklist Mise en Production</h3>
+        <table>
+          <tr>
+            <td>☐</td>
+            <td>Choisir un hébergeur (VPS recommandé : Hostinger ou Contabo)</td>
+          </tr>
+          <tr>
+            <td>☐</td>
+            <td>Acheter un nom de domaine (.sn ou .com)</td>
+          </tr>
+          <tr>
+            <td>☐</td>
+            <td>Configurer le serveur (Node.js, PostgreSQL, Redis, Nginx)</td>
+          </tr>
+          <tr>
+            <td>☐</td>
+            <td>Déployer le backend avec PM2</td>
+          </tr>
+          <tr>
+            <td>☐</td>
+            <td>Builder et déployer le frontend</td>
+          </tr>
+          <tr>
+            <td>☐</td>
+            <td>Configurer SSL avec Let's Encrypt</td>
+          </tr>
+          <tr>
+            <td>☐</td>
+            <td>Configurer les backups automatiques de PostgreSQL</td>
+          </tr>
+          <tr>
+            <td>☐</td>
+            <td>Tester le mode offline sur mobile</td>
+          </tr>
+          <tr>
+            <td>☐</td>
+            <td>Former les utilisateurs (DIRECTION, COORDINATEUR, MAGASINIER)</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="subsection">
+        <h3>Support & Maintenance</h3>
+        <p>Pour la maintenance continue, prévoir :</p>
+        <ul style="list-style: disc; padding-left: 25px;">
+          <li>Monitoring serveur (UptimeRobot gratuit, ou Grafana)</li>
+          <li>Backups quotidiens de la base de données</li>
+          <li>Mises à jour de sécurité (npm audit, apt upgrade)</li>
+          <li>Logs d'erreurs (PM2 logs, ou service comme Sentry)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Document généré le 17/01/2026 - ACL Platform</p>
+      <p>Contact : Abdourahmane Ndiaye - rahmaneabdoundiaye@gmail.com</p>
+    </div>
+  </div>
+</body>
+</html>
