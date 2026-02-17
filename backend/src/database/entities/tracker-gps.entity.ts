@@ -21,9 +21,6 @@ export class TrackerGps {
   @JoinColumn({ name: 'camion_id' })
   camion: Camion;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  nom: string;
-
   @Column({ length: 20, unique: true })
   imei: string;
 
