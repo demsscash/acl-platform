@@ -110,7 +110,7 @@ const CONFIG_LABELS: Record<string, { label: string; unit?: string; type: 'numbe
 
 function ConfigPage() {
   const queryClient = useQueryClient();
-  const { showSuccess, showError } = useToast();
+  const { success: showSuccess, error: showError } = useToast();
   const { hasModulePermission } = useAuthStore();
   const canEdit = hasModulePermission('config', 'update');
 

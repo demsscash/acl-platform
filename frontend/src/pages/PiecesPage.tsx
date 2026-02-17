@@ -41,6 +41,7 @@ const typeEntreeLabels: Record<TypeEntree, string> = {
   RETOUR: 'Retour',
   TRANSFERT: 'Transfert',
   INVENTAIRE: 'Inventaire',
+  RECUPERATION_CAMION: 'Récupération camion',
   AUTRE: 'Autre',
 };
 
