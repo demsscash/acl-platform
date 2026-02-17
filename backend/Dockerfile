@@ -21,7 +21,7 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["node", "dist/main"]
+CMD ["npm", "run", "start:railway"]
 
 # Development stage
 FROM node:20-alpine AS development
