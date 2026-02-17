@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Client } from './client.entity';
 
-@Entity('contacts_client')
+@Entity('contacts_clients')
 export class ContactClient {
   @PrimaryGeneratedColumn()
   id: number;
