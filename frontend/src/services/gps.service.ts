@@ -225,7 +225,8 @@ class GpsWebSocketClient {
 
   connect(token: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const baseUrl = apiUrl.replace(/\/api\/?$/, '');
 
       this.socket = io(`${baseUrl}/gps`, {
         auth: { token },
