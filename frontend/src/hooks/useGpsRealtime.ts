@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   gpsWebSocket,
-  GpsPositionUpdate,
-  GpsAlertNotification,
-  GeofenceEvent,
+  type GpsPositionUpdate,
+  type GpsAlertNotification,
+  type GeofenceEvent,
 } from '../services/gps.service';
 import { useAuthStore } from '../stores/auth.store';
 

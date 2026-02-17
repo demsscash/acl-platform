@@ -219,11 +219,6 @@ export default function CaissesPage() {
     addMouvementMutation.mutate({ caisseId: selectedCaisse.id, data: mouvementForm });
   };
 
-  const handleVirementSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    virementMutation.mutate(virementForm);
-  };
-
   if (isLoading) {
     return (
       <div>

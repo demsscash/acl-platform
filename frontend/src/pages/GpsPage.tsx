@@ -19,7 +19,7 @@ export default function GpsPage() {
     alerteSurvitesseSeuil: 100,
   });
 
-  const { data: positions, isLoading: loadingPositions } = useQuery({
+  const { data: positions } = useQuery({
     queryKey: ['gps-positions'],
     queryFn: gpsService.getPositions,
     refetchInterval: 30000, // Refresh every 30 seconds
