@@ -19,7 +19,13 @@ export class AlignSchemaWithEntities1000000000001 implements MigrationInterface 
     // ============================================================
 
     // TypeMaintenance entity uses different values than migration's type_maintenance
-    await queryRunner.query(`ALTER TYPE type_maintenance RENAME TO type_maintenance_old;`);
+    // Rename old enum (skip if already renamed or doesn't exist)
+    await queryRunner.query(`
+      DO $$ BEGIN
+        ALTER TYPE type_maintenance RENAME TO type_maintenance_old;
+      EXCEPTION WHEN undefined_object THEN null;
+      END $$;
+    `);
     await queryRunner.query(`
       DO $$ BEGIN
         CREATE TYPE type_maintenance AS ENUM ('PREVENTIVE', 'CORRECTIVE', 'REVISION', 'CONTROLE_TECHNIQUE', 'VIDANGE', 'FREINS', 'PNEUS', 'AUTRE');
@@ -120,8 +126,10 @@ export class AlignSchemaWithEntities1000000000001 implements MigrationInterface 
     await queryRunner.query(`ALTER TABLE entrees_stock ADD COLUMN IF NOT EXISTS numero_bl VARCHAR(100);`);
     await queryRunner.query(`ALTER TABLE entrees_stock ADD COLUMN IF NOT EXISTS updated_by INTEGER REFERENCES users(id);`);
     await queryRunner.query(`ALTER TABLE entrees_stock ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`);
-    // Change type_entree from VARCHAR to enum
+    // Change type_entree from VARCHAR to enum (must drop default first)
+    await queryRunner.query(`ALTER TABLE entrees_stock ALTER COLUMN type_entree DROP DEFAULT;`);
     await queryRunner.query(`ALTER TABLE entrees_stock ALTER COLUMN type_entree TYPE type_entree_stock USING type_entree::type_entree_stock;`);
+    await queryRunner.query(`ALTER TABLE entrees_stock ALTER COLUMN type_entree SET DEFAULT 'ACHAT';`);
 
     // ============================================================
     // 4. lignes_entrees_stock - Add missing columns
@@ -132,7 +140,11 @@ export class AlignSchemaWithEntities1000000000001 implements MigrationInterface 
     // ============================================================
     // 5. sorties_stock - Fix motif to enum, add missing columns
     // ============================================================
+    // motif is TEXT, may have NULL values - set a default before casting
+    await queryRunner.query(`UPDATE sorties_stock SET motif = 'MAINTENANCE' WHERE motif IS NULL OR motif = '';`);
+    await queryRunner.query(`ALTER TABLE sorties_stock ALTER COLUMN motif SET NOT NULL;`);
     await queryRunner.query(`ALTER TABLE sorties_stock ALTER COLUMN motif TYPE motif_sortie USING motif::motif_sortie;`);
+    await queryRunner.query(`ALTER TABLE sorties_stock ALTER COLUMN motif SET DEFAULT 'MAINTENANCE';`);
     await queryRunner.query(`ALTER TABLE sorties_stock ADD COLUMN IF NOT EXISTS updated_by INTEGER REFERENCES users(id);`);
     await queryRunner.query(`ALTER TABLE sorties_stock ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;`);
 
@@ -492,6 +504,7 @@ export class AlignSchemaWithEntities1000000000001 implements MigrationInterface 
     // ============================================================
     // 23. Update planification_maintenance to use new type_maintenance enum
     // ============================================================
+    await queryRunner.query(`ALTER TABLE planification_maintenance ALTER COLUMN type_maintenance DROP DEFAULT;`);
     await queryRunner.query(`
       ALTER TABLE planification_maintenance
         ALTER COLUMN type_maintenance TYPE type_maintenance
@@ -499,6 +512,7 @@ export class AlignSchemaWithEntities1000000000001 implements MigrationInterface 
     `);
 
     // Update historique_maintenance to use new type_maintenance enum
+    await queryRunner.query(`ALTER TABLE historique_maintenance ALTER COLUMN type_maintenance DROP DEFAULT;`);
     await queryRunner.query(`
       ALTER TABLE historique_maintenance
         ALTER COLUMN type_maintenance TYPE type_maintenance
