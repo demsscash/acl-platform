@@ -153,7 +153,7 @@ import { AuditModule } from './audit/audit.module';
             Caisse,
             MouvementCaisse,
           ],
-          synchronize: process.env.DATABASE_SYNC === 'true',
+          synchronize: false,
           logging: process.env.NODE_ENV === 'development',
         };
 

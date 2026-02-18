@@ -219,9 +219,9 @@ export async function seedData(dataSource: DataSource) {
 
     console.log('  → Insertion des caisses...');
     await queryRunner.query(`
-      INSERT INTO caisses (nom, code, solde_actuel, devise)
-      VALUES ('Caisse Principale', 'CAISSE-01', 500000, 'XOF')
-      ON CONFLICT (code) DO NOTHING
+      INSERT INTO caisses (nom, type, solde_initial, solde_actuel)
+      VALUES ('Caisse Principale', 'CENTRALE', 500000, 500000)
+      ON CONFLICT DO NOTHING
     `);
 
     await queryRunner.commitTransaction();
