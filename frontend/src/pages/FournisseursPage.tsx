@@ -178,7 +178,7 @@ export default function FournisseursPage() {
     return (
       <div>
         <Breadcrumb />
-        <div className="flex justify-between items-center mb-6">
+        <div className="page-header">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Gestion des Fournisseurs</h1>
             <p className="text-gray-600">Liste et historique des fournisseurs</p>
@@ -193,7 +193,7 @@ export default function FournisseursPage() {
     <div>
       <Breadcrumb />
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gestion des Fournisseurs</h1>
           <p className="text-gray-600">Liste et historique des fournisseurs</p>

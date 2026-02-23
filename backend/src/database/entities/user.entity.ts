@@ -54,20 +54,6 @@ export class User {
   @Column({ name: 'refresh_token', nullable: true, length: 500 })
   refreshToken: string;
 
-  @Column({ name: 'created_by', nullable: true })
-  createdBy: number;
-
-  @ManyToOne('User', { nullable: true })
-  @JoinColumn({ name: 'created_by' })
-  createur: any;
-
-  @Column({ name: 'updated_by', nullable: true })
-  updatedBy: number;
-
-  @ManyToOne('User', { nullable: true })
-  @JoinColumn({ name: 'updated_by' })
-  modificateur: any;
-
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

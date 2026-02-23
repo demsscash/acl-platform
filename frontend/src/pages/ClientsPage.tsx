@@ -418,7 +418,7 @@ export default function ClientsPage() {
     return (
       <div>
         <Breadcrumb />
-        <div className="flex justify-between items-center mb-6">
+        <div className="page-header">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestion des Clients</h1>
             <p className="text-gray-600 dark:text-gray-300">Gérez vos clients et consultez leur historique de prestations</p>
@@ -441,7 +441,7 @@ export default function ClientsPage() {
     <div>
       <Breadcrumb />
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestion des Clients</h1>
           <p className="text-gray-600 dark:text-gray-300">Gérez vos clients et consultez leur historique de prestations</p>
@@ -764,7 +764,7 @@ export default function ClientsPage() {
 
       {/* Modal Historique */}
       {showHistorique && selectedClient && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4 px-4">
           <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
             <div className="p-6 border-b dark:border-gray-700 flex justify-between items-center">
               <div>

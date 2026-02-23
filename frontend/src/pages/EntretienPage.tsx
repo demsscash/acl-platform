@@ -306,7 +306,7 @@ export default function EntretienPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Entretien & Maintenance</h1>
           <p className="text-gray-500 dark:text-gray-400">Gestion des maintenances des camions</p>

@@ -645,7 +645,7 @@ export default function ChauffeursPage() {
     return (
       <div>
         <Breadcrumb />
-        <div className="flex justify-between items-center mb-6">
+        <div className="page-header">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Gestion des Chauffeurs</h1>
             <p className="text-gray-600">Gérez les profils administratifs des chauffeurs</p>
@@ -668,7 +668,7 @@ export default function ChauffeursPage() {
     <div>
       <Breadcrumb />
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gestion des Chauffeurs</h1>
           <p className="text-gray-600">Gérez les profils administratifs des chauffeurs</p>
@@ -1080,7 +1080,7 @@ export default function ChauffeursPage() {
 
       {/* Fiche d'information Modal */}
       {showHistorique && selectedChauffeur && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4 px-4">
           <div className="bg-white rounded-lg w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
             <div className="p-6 border-b flex justify-between items-center bg-gradient-to-r from-yellow-500 to-yellow-400">
               <div className="flex items-center gap-4">

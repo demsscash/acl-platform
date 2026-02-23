@@ -598,7 +598,7 @@ export default function LocationPage() {
     return (
       <div>
         <Breadcrumb />
-        <div className="flex justify-between items-center mb-6">
+        <div className="page-header">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bons de Location</h1>
             <p className="text-gray-600 dark:text-gray-400">Gestion des locations de véhicules</p>
@@ -613,7 +613,7 @@ export default function LocationPage() {
     <div>
       <Breadcrumb />
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bons de Location</h1>
           <p className="text-gray-600 dark:text-gray-400">Gestion des locations de véhicules</p>

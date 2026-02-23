@@ -24,7 +24,7 @@ export default function UsersPage() {
     title: string;
     message: string;
     onConfirm: () => void;
-  }>({ show: false, title: '', message: '', onConfirm: () => {} });
+  }>({ show: false, title: '', message: '', onConfirm: () => { } });
 
   const { data: users, isLoading } = useQuery({
     queryKey: ['users'],
@@ -102,7 +102,7 @@ export default function UsersPage() {
         message: `Voulez-vous vraiment modifier l'utilisateur ${editingUser.prenom} ${editingUser.nom} ?`,
         onConfirm: () => {
           updateMutation.mutate({ id: editingUser.id, data: updateData });
-          setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} });
+          setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } });
         },
       });
     } else {
@@ -121,7 +121,7 @@ export default function UsersPage() {
       message: `Voulez-vous vraiment désactiver l'utilisateur ${user.prenom} ${user.nom} ?`,
       onConfirm: () => {
         deleteMutation.mutate(user.id);
-        setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} });
+        setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } });
       },
     });
   };
@@ -168,7 +168,7 @@ export default function UsersPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestion des Utilisateurs</h1>
           <p className="text-gray-600 dark:text-gray-400">Ajouter, modifier ou désactiver des employés</p>
@@ -212,90 +212,92 @@ export default function UsersPage() {
 
       {/* Users Table */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        {isLoading ? (
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div>
-          </div>
-        ) : (
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-700">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Utilisateur</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Téléphone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Rôle</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Dernière connexion</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {users?.map((user) => (
-                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                        <span className="text-gray-600 dark:text-gray-300 font-medium">
-                          {user.prenom?.[0]}{user.nom?.[0]}
-                        </span>
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-medium text-gray-900 dark:text-white">
-                          {user.prenom} {user.nom}
-                          {user.id === currentUser?.id && (
-                            <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">(vous)</span>
-                          )}
+        <div className="overflow-x-auto">
+          {isLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div>
+            </div>
+          ) : (
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Utilisateur</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Email</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Téléphone</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Rôle</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Dernière connexion</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {users?.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                          <span className="text-gray-600 dark:text-gray-300 font-medium">
+                            {user.prenom?.[0]}{user.nom?.[0]}
+                          </span>
+                        </div>
+                        <div className="ml-4">
+                          <div className="font-medium text-gray-900 dark:text-white">
+                            {user.prenom} {user.nom}
+                            {user.id === currentUser?.id && (
+                              <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">(vous)</span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600 dark:text-gray-400">{user.email}</td>
-                  <td className="px-6 py-4 text-gray-600 dark:text-gray-400">{user.telephone || '-'}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleBadgeClass(user.role)}`}>
-                      {getRoleLabel(user.role)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
-                    {user.derniereConnexion
-                      ? new Date(user.derniereConnexion).toLocaleString('fr-FR')
-                      : 'Jamais'}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => openEditModal(user)}
-                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                        title="Modifier"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                      </button>
-                      {user.id !== currentUser?.id && (
+                    </td>
+                    <td className="px-6 py-4 text-gray-600 dark:text-gray-400">{user.email}</td>
+                    <td className="px-6 py-4 text-gray-600 dark:text-gray-400">{user.telephone || '-'}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getRoleBadgeClass(user.role)}`}>
+                        {getRoleLabel(user.role)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
+                      {user.derniereConnexion
+                        ? new Date(user.derniereConnexion).toLocaleString('fr-FR')
+                        : 'Jamais'}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
                         <button
-                          onClick={() => handleDelete(user)}
-                          className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                          title="Désactiver"
+                          onClick={() => openEditModal(user)}
+                          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                          title="Modifier"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>
                         </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {users?.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                    Aucun utilisateur trouvé
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        )}
+                        {user.id !== currentUser?.id && (
+                          <button
+                            onClick={() => handleDelete(user)}
+                            className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                            title="Désactiver"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {users?.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                      Aucun utilisateur trouvé
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
 
       {/* Create/Edit Modal */}
@@ -412,7 +414,7 @@ export default function UsersPage() {
             <p className="text-gray-600 dark:text-gray-400 mb-6">{confirmModal.message}</p>
             <div className="flex justify-end gap-3">
               <button
-                onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} })}
+                onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } })}
                 className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600"
               >
                 Annuler

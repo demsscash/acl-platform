@@ -152,7 +152,39 @@
   .table tbody tr:hover {
     @apply bg-acl-yellow-50;
   }
+
+  /* ─── Responsive Page Header ─── */
+  /* Place on the div wrapping title + action button */
+  .page-header {
+    @apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6;
+  }
+
+  /* ─── Responsive Table Container ─── */
+  /* Wrap any <table> in this */
+  .table-container {
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden;
+  }
+
+  .table-responsive {
+    @apply overflow-x-auto;
+  }
+
+  /* ─── Responsive Stats Grid ─── */
+  .stats-grid {
+    @apply grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6;
+  }
+
+  .stats-grid-5 {
+    @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6;
+  }
+
+  /* ─── Responsive Modal ─── */
+  /* Add to the modal dialog inner div */
+  .modal-responsive {
+    @apply w-full mx-4 sm:mx-auto;
+  }
 }
+
 
 /* Leaflet Map Fixes */
 .leaflet-container {

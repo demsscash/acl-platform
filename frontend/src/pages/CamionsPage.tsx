@@ -145,7 +145,7 @@ export default function CamionsPage() {
     title: string;
     message: string;
     onConfirm: () => void;
-  }>({ show: false, title: '', message: '', onConfirm: () => {} });
+  }>({ show: false, title: '', message: '', onConfirm: () => { } });
 
   const [formData, setFormData] = useState<CreateCamionDto>({
     immatriculation: '',
@@ -219,7 +219,7 @@ export default function CamionsPage() {
   // Keyboard shortcuts - Escape to close modals
   useEscapeKey(() => {
     if (confirmModal.show) {
-      setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} });
+      setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } });
     } else if (showModal) {
       closeModal();
     } else if (showHistorique) {
@@ -315,7 +315,7 @@ export default function CamionsPage() {
         message: `Voulez-vous vraiment modifier le camion ${editingCamion.immatriculation} ?`,
         onConfirm: () => {
           updateMutation.mutate({ id: editingCamion.id, data: formData });
-          setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} });
+          setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } });
         },
       });
     } else {
@@ -330,7 +330,7 @@ export default function CamionsPage() {
       message: `Voulez-vous vraiment supprimer le camion ${camion.immatriculation} ?`,
       onConfirm: () => {
         deleteMutation.mutate(camion.id);
-        setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} });
+        setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } });
       },
     });
   };
@@ -454,12 +454,12 @@ export default function CamionsPage() {
       <Breadcrumb />
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestion des Camions</h1>
-          <p className="text-gray-600">Gérez votre flotte de véhicules</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestion des Camions</h1>
+          <p className="text-gray-600 dark:text-gray-400">Gérez votre flotte de véhicules</p>
         </div>
-        <button onClick={openCreateModal} className="bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-400 flex items-center gap-2">
+        <button onClick={openCreateModal} className="bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-400 flex items-center gap-2 flex-shrink-0">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
@@ -472,18 +472,16 @@ export default function CamionsPage() {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
         <div
           onClick={() => setStatusFilter(null)}
-          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${
-            statusFilter === null ? 'ring-2 ring-gray-400 bg-gray-50 dark:bg-gray-700' : ''
-          }`}
+          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${statusFilter === null ? 'ring-2 ring-gray-400 bg-gray-50 dark:bg-gray-700' : ''
+            }`}
         >
           <p className="text-sm text-gray-600 dark:text-gray-400">Total</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white">{camions?.length || 0}</p>
         </div>
         <div
           onClick={() => setStatusFilter(statusFilter === 'DISPONIBLE' ? null : 'DISPONIBLE')}
-          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${
-            statusFilter === 'DISPONIBLE' ? 'ring-2 ring-green-500 bg-green-50 dark:bg-green-900/30' : ''
-          }`}
+          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${statusFilter === 'DISPONIBLE' ? 'ring-2 ring-green-500 bg-green-50 dark:bg-green-900/30' : ''
+            }`}
         >
           <p className="text-sm text-gray-600 dark:text-gray-400">Disponibles</p>
           <p className="text-2xl font-bold text-green-600 dark:text-green-400">
@@ -492,9 +490,8 @@ export default function CamionsPage() {
         </div>
         <div
           onClick={() => setStatusFilter(statusFilter === 'EN_MISSION' ? null : 'EN_MISSION')}
-          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${
-            statusFilter === 'EN_MISSION' ? 'ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-900/30' : ''
-          }`}
+          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${statusFilter === 'EN_MISSION' ? 'ring-2 ring-blue-500 bg-blue-50 dark:bg-blue-900/30' : ''
+            }`}
         >
           <p className="text-sm text-gray-600 dark:text-gray-400">En mission</p>
           <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -503,9 +500,8 @@ export default function CamionsPage() {
         </div>
         <div
           onClick={() => setStatusFilter(statusFilter === 'EN_MAINTENANCE' ? null : 'EN_MAINTENANCE')}
-          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${
-            statusFilter === 'EN_MAINTENANCE' ? 'ring-2 ring-yellow-500 bg-yellow-50 dark:bg-yellow-900/30' : ''
-          }`}
+          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${statusFilter === 'EN_MAINTENANCE' ? 'ring-2 ring-yellow-500 bg-yellow-50 dark:bg-yellow-900/30' : ''
+            }`}
         >
           <p className="text-sm text-gray-600 dark:text-gray-400">En maintenance</p>
           <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
@@ -514,9 +510,8 @@ export default function CamionsPage() {
         </div>
         <div
           onClick={() => setStatusFilter(statusFilter === 'HORS_SERVICE' ? null : 'HORS_SERVICE')}
-          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${
-            statusFilter === 'HORS_SERVICE' ? 'ring-2 ring-red-500 bg-red-50 dark:bg-red-900/30' : ''
-          }`}
+          className={`bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm cursor-pointer transition-all hover:shadow-md ${statusFilter === 'HORS_SERVICE' ? 'ring-2 ring-red-500 bg-red-50 dark:bg-red-900/30' : ''
+            }`}
         >
           <p className="text-sm text-gray-600 dark:text-gray-400">Hors service</p>
           <p className="text-2xl font-bold text-red-600 dark:text-red-400">
@@ -545,7 +540,7 @@ export default function CamionsPage() {
       )}
 
       {/* Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+      <div className="table-container">
         {/* Search and Export */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between gap-4">
           {/* Search Input */}
@@ -576,66 +571,66 @@ export default function CamionsPage() {
           </div>
           {/* Export buttons */}
           <div className="flex gap-2">
-          <button
-            onClick={() => {
-              if (!filteredAndSortedCamions || filteredAndSortedCamions.length === 0) return;
-              exportToCSV(
-                filteredAndSortedCamions.map(c => ({
-                  immatriculation: c.immatriculation,
-                  numeroInterne: c.numeroInterne || '-',
-                  marque: c.marque,
-                  modele: c.modele || '-',
-                  typeCamion: c.typeCamion,
-                  typeCarburant: c.typeCarburant || '-',
-                  kilometrage: c.kilometrage || 0,
-                  capaciteReservoir: c.capaciteReservoirLitres || 0,
-                  statut: statutLabels[c.statut] || c.statut,
-                })),
-                'camions',
-                [
-                  { key: 'immatriculation', label: 'Immatriculation' },
-                  { key: 'numeroInterne', label: 'N° Interne' },
-                  { key: 'marque', label: 'Marque' },
-                  { key: 'modele', label: 'Modèle' },
-                  { key: 'typeCamion', label: 'Type' },
-                  { key: 'typeCarburant', label: 'Carburant' },
-                  { key: 'kilometrage', label: 'Kilométrage' },
-                  { key: 'capaciteReservoir', label: 'Réservoir (L)' },
-                  { key: 'statut', label: 'Statut' },
-                ]
-              );
-            }}
-            disabled={!filteredAndSortedCamions || filteredAndSortedCamions.length === 0}
-            className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Exporter CSV ({filteredAndSortedCamions?.length || 0})
-          </button>
-          <button
-            onClick={() => {
-              if (!filteredAndSortedCamions || filteredAndSortedCamions.length === 0) return;
-              printTable(
-                'Liste des Camions',
-                ['Immatriculation', 'Type', 'Marque/Modèle', 'Kilométrage', 'Statut'],
-                filteredAndSortedCamions.map(c => [
-                  c.immatriculation,
-                  c.typeCamion,
-                  `${c.marque} ${c.modele || ''}`,
-                  c.kilometrage ? `${c.kilometrage.toLocaleString()} km` : '-',
-                  statutLabels[c.statut] || c.statut,
-                ])
-              );
-            }}
-            disabled={!filteredAndSortedCamions || filteredAndSortedCamions.length === 0}
-            className="px-3 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-            Imprimer
-          </button>
+            <button
+              onClick={() => {
+                if (!filteredAndSortedCamions || filteredAndSortedCamions.length === 0) return;
+                exportToCSV(
+                  filteredAndSortedCamions.map(c => ({
+                    immatriculation: c.immatriculation,
+                    numeroInterne: c.numeroInterne || '-',
+                    marque: c.marque,
+                    modele: c.modele || '-',
+                    typeCamion: c.typeCamion,
+                    typeCarburant: c.typeCarburant || '-',
+                    kilometrage: c.kilometrage || 0,
+                    capaciteReservoir: c.capaciteReservoirLitres || 0,
+                    statut: statutLabels[c.statut] || c.statut,
+                  })),
+                  'camions',
+                  [
+                    { key: 'immatriculation', label: 'Immatriculation' },
+                    { key: 'numeroInterne', label: 'N° Interne' },
+                    { key: 'marque', label: 'Marque' },
+                    { key: 'modele', label: 'Modèle' },
+                    { key: 'typeCamion', label: 'Type' },
+                    { key: 'typeCarburant', label: 'Carburant' },
+                    { key: 'kilometrage', label: 'Kilométrage' },
+                    { key: 'capaciteReservoir', label: 'Réservoir (L)' },
+                    { key: 'statut', label: 'Statut' },
+                  ]
+                );
+              }}
+              disabled={!filteredAndSortedCamions || filteredAndSortedCamions.length === 0}
+              className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Exporter CSV ({filteredAndSortedCamions?.length || 0})
+            </button>
+            <button
+              onClick={() => {
+                if (!filteredAndSortedCamions || filteredAndSortedCamions.length === 0) return;
+                printTable(
+                  'Liste des Camions',
+                  ['Immatriculation', 'Type', 'Marque/Modèle', 'Kilométrage', 'Statut'],
+                  filteredAndSortedCamions.map(c => [
+                    c.immatriculation,
+                    c.typeCamion,
+                    `${c.marque} ${c.modele || ''}`,
+                    c.kilometrage ? `${c.kilometrage.toLocaleString()} km` : '-',
+                    statutLabels[c.statut] || c.statut,
+                  ])
+                );
+              }}
+              disabled={!filteredAndSortedCamions || filteredAndSortedCamions.length === 0}
+              className="px-3 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+              Imprimer
+            </button>
           </div>
         </div>
         {/* Results count */}
@@ -644,7 +639,7 @@ export default function CamionsPage() {
             {filteredAndSortedCamions.length} résultat(s) trouvé(s)
           </div>
         )}
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="table-responsive"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th
@@ -752,7 +747,7 @@ export default function CamionsPage() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
 
         {/* Pagination */}
         {filteredAndSortedCamions.length > 0 && (
@@ -768,8 +763,8 @@ export default function CamionsPage() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4 px-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
               {editingCamion ? 'Modifier le camion' : 'Nouveau camion'}
             </h2>
@@ -978,10 +973,10 @@ export default function CamionsPage() {
                       {formData.statut === 'EN_MISSION'
                         ? "Ce camion est actuellement en mission. Le statut changera automatiquement à la fin de la mission."
                         : formData.statut === 'EN_MAINTENANCE'
-                        ? "Le camion est en maintenance et ne peut pas être assigné à des missions."
-                        : formData.statut === 'HORS_SERVICE'
-                        ? "Le camion est hors service (panne majeure, accident, etc.)."
-                        : "Le camion est disponible pour des missions."
+                          ? "Le camion est en maintenance et ne peut pas être assigné à des missions."
+                          : formData.statut === 'HORS_SERVICE'
+                            ? "Le camion est hors service (panne majeure, accident, etc.)."
+                            : "Le camion est disponible pour des missions."
                       }
                     </p>
                   </div>
@@ -1328,28 +1323,26 @@ export default function CamionsPage() {
                               </td>
                               <td className="px-4 py-2 text-sm">{p.typePanne}</td>
                               <td className="px-4 py-2">
-                                <span className={`px-2 py-1 text-xs rounded-full ${
-                                  p.priorite === 'URGENTE' ? 'bg-red-100 text-red-800' :
-                                  p.priorite === 'HAUTE' ? 'bg-orange-100 text-orange-800' :
-                                  p.priorite === 'NORMALE' ? 'bg-blue-100 text-blue-800' :
-                                  'bg-gray-100 text-gray-800'
-                                }`}>
+                                <span className={`px-2 py-1 text-xs rounded-full ${p.priorite === 'URGENTE' ? 'bg-red-100 text-red-800' :
+                                    p.priorite === 'HAUTE' ? 'bg-orange-100 text-orange-800' :
+                                      p.priorite === 'NORMALE' ? 'bg-blue-100 text-blue-800' :
+                                        'bg-gray-100 text-gray-800'
+                                  }`}>
                                   {p.priorite}
                                 </span>
                               </td>
                               <td className="px-4 py-2">
-                                <span className={`px-2 py-1 text-xs rounded-full ${
-                                  p.statut === 'REPAREE' || p.statut === 'CLOTUREE' ? 'bg-green-100 text-green-800' :
-                                  p.statut === 'EN_REPARATION' ? 'bg-blue-100 text-blue-800' :
-                                  p.statut === 'DECLAREE' ? 'bg-red-100 text-red-800' :
-                                  'bg-yellow-100 text-yellow-800'
-                                }`}>
+                                <span className={`px-2 py-1 text-xs rounded-full ${p.statut === 'REPAREE' || p.statut === 'CLOTUREE' ? 'bg-green-100 text-green-800' :
+                                    p.statut === 'EN_REPARATION' ? 'bg-blue-100 text-blue-800' :
+                                      p.statut === 'DECLAREE' ? 'bg-red-100 text-red-800' :
+                                        'bg-yellow-100 text-yellow-800'
+                                  }`}>
                                   {p.statut === 'EN_DIAGNOSTIC' ? 'Diagnostic' :
-                                   p.statut === 'EN_ATTENTE_PIECES' ? 'Attente pièces' :
-                                   p.statut === 'EN_REPARATION' ? 'En réparation' :
-                                   p.statut === 'REPAREE' ? 'Réparée' :
-                                   p.statut === 'CLOTUREE' ? 'Clôturée' :
-                                   p.statut}
+                                    p.statut === 'EN_ATTENTE_PIECES' ? 'Attente pièces' :
+                                      p.statut === 'EN_REPARATION' ? 'En réparation' :
+                                        p.statut === 'REPAREE' ? 'Réparée' :
+                                          p.statut === 'CLOTUREE' ? 'Clôturée' :
+                                            p.statut}
                                 </span>
                               </td>
                               <td className="px-4 py-2 text-sm text-right">
@@ -1421,11 +1414,10 @@ export default function CamionsPage() {
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-sm text-gray-500">Statut</p>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    selectedTransport.statut === 'TERMINE' ? 'bg-green-100 text-green-800' :
-                    selectedTransport.statut === 'EN_COURS' ? 'bg-blue-100 text-blue-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${selectedTransport.statut === 'TERMINE' ? 'bg-green-100 text-green-800' :
+                      selectedTransport.statut === 'EN_COURS' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                    }`}>
                     {selectedTransport.statut}
                   </span>
                 </div>
@@ -1518,11 +1510,10 @@ export default function CamionsPage() {
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-sm text-gray-500">Statut</p>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    selectedLocation.statut === 'TERMINE' ? 'bg-green-100 text-green-800' :
-                    selectedLocation.statut === 'EN_COURS' ? 'bg-blue-100 text-blue-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${selectedLocation.statut === 'TERMINE' ? 'bg-green-100 text-green-800' :
+                      selectedLocation.statut === 'EN_COURS' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                    }`}>
                     {selectedLocation.statut}
                   </span>
                 </div>
@@ -1617,9 +1608,8 @@ export default function CamionsPage() {
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-sm text-gray-500">Source</p>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    selectedDotation.typeSource === 'CUVE_INTERNE' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${selectedDotation.typeSource === 'CUVE_INTERNE' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                    }`}>
                     {selectedDotation.typeSource === 'CUVE_INTERNE' ? 'Cuve interne' : 'Station externe'}
                   </span>
                 </div>
@@ -1710,18 +1700,17 @@ export default function CamionsPage() {
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-sm text-gray-500">Statut</p>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    selectedPanne.statut === 'REPAREE' || selectedPanne.statut === 'CLOTUREE' ? 'bg-green-100 text-green-800' :
-                    selectedPanne.statut === 'EN_REPARATION' ? 'bg-blue-100 text-blue-800' :
-                    selectedPanne.statut === 'DECLAREE' ? 'bg-red-100 text-red-800' :
-                    'bg-yellow-100 text-yellow-800'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${selectedPanne.statut === 'REPAREE' || selectedPanne.statut === 'CLOTUREE' ? 'bg-green-100 text-green-800' :
+                      selectedPanne.statut === 'EN_REPARATION' ? 'bg-blue-100 text-blue-800' :
+                        selectedPanne.statut === 'DECLAREE' ? 'bg-red-100 text-red-800' :
+                          'bg-yellow-100 text-yellow-800'
+                    }`}>
                     {selectedPanne.statut === 'EN_DIAGNOSTIC' ? 'En diagnostic' :
-                     selectedPanne.statut === 'EN_ATTENTE_PIECES' ? 'Attente pièces' :
-                     selectedPanne.statut === 'EN_REPARATION' ? 'En réparation' :
-                     selectedPanne.statut === 'REPAREE' ? 'Réparée' :
-                     selectedPanne.statut === 'CLOTUREE' ? 'Clôturée' :
-                     selectedPanne.statut}
+                      selectedPanne.statut === 'EN_ATTENTE_PIECES' ? 'Attente pièces' :
+                        selectedPanne.statut === 'EN_REPARATION' ? 'En réparation' :
+                          selectedPanne.statut === 'REPAREE' ? 'Réparée' :
+                            selectedPanne.statut === 'CLOTUREE' ? 'Clôturée' :
+                              selectedPanne.statut}
                   </span>
                 </div>
               </div>
@@ -1733,12 +1722,11 @@ export default function CamionsPage() {
                 </div>
                 <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
                   <p className="text-sm text-orange-600">Priorité</p>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    selectedPanne.priorite === 'URGENTE' ? 'bg-red-100 text-red-800' :
-                    selectedPanne.priorite === 'HAUTE' ? 'bg-orange-100 text-orange-800' :
-                    selectedPanne.priorite === 'NORMALE' ? 'bg-blue-100 text-blue-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${selectedPanne.priorite === 'URGENTE' ? 'bg-red-100 text-red-800' :
+                      selectedPanne.priorite === 'HAUTE' ? 'bg-orange-100 text-orange-800' :
+                        selectedPanne.priorite === 'NORMALE' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                    }`}>
                     {selectedPanne.priorite}
                   </span>
                 </div>
@@ -1774,9 +1762,8 @@ export default function CamionsPage() {
 
               {/* Réparation info */}
               {(selectedPanne.typeReparation || selectedPanne.garageExterne || selectedPanne.reparateurInterne) && (
-                <div className={`mb-6 p-4 rounded-lg border ${
-                  selectedPanne.typeReparation === 'INTERNE' ? 'bg-blue-50 border-blue-200' : 'bg-orange-50 border-orange-200'
-                }`}>
+                <div className={`mb-6 p-4 rounded-lg border ${selectedPanne.typeReparation === 'INTERNE' ? 'bg-blue-50 border-blue-200' : 'bg-orange-50 border-orange-200'
+                  }`}>
                   <h4 className="font-semibold mb-2">
                     Réparation {selectedPanne.typeReparation === 'INTERNE' ? 'interne' : 'externe'}
                   </h4>
@@ -1828,7 +1815,7 @@ export default function CamionsPage() {
             <p className="text-gray-600 mb-6">{confirmModal.message}</p>
             <div className="flex justify-end gap-3">
               <button
-                onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} })}
+                onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } })}
                 className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
               >
                 Annuler

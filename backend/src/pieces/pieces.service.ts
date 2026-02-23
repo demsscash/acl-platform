@@ -94,7 +94,7 @@ export class PiecesService {
     private readonly mouvementRepository: Repository<MouvementPiece>,
     @InjectRepository(Camion)
     private readonly camionRepository: Repository<Camion>,
-  ) {}
+  ) { }
 
   // Catalogue
   async findAllPieces(): Promise<CataloguePiece[]> {
@@ -143,6 +143,23 @@ export class PiecesService {
     const piece = await this.findOnePiece(id);
     Object.assign(piece, data);
     return this.catalogueRepository.save(piece);
+  }
+
+  async deletePiece(id: number): Promise<void> {
+    const piece = await this.findOnePiece(id);
+
+    // Check if the piece has any stock movements or stock associated
+    const stocks = await this.getStockByPiece(id);
+    const hasStock = stocks.some(s => s.quantiteDisponible > 0 || s.quantiteReservee > 0);
+
+    if (hasStock) {
+      throw new BadRequestException('Impossible de supprimer une pièce avec du stock existant');
+    }
+
+    // Instead of absolute deletion, you might want to soft-delete if there are historical records.
+    // For now, doing soft delete
+    piece.actif = false;
+    await this.catalogueRepository.save(piece);
   }
 
   // Stock

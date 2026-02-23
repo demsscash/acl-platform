@@ -6,7 +6,7 @@ import { ExportService, ExportFilters } from './export.service';
 @Controller('api/export')
 @UseGuards(JwtAuthGuard)
 export class ExportController {
-  constructor(private readonly exportService: ExportService) {}
+  constructor(private readonly exportService: ExportService) { }
 
   @Get('stats')
   async getStats(
@@ -15,7 +15,11 @@ export class ExportController {
   ) {
     const filters: ExportFilters = {};
     if (dateDebut) filters.dateDebut = new Date(dateDebut);
-    if (dateFin) filters.dateFin = new Date(dateFin);
+    if (dateFin) {
+      const endOfDay = new Date(dateFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.dateFin = endOfDay;
+    }
 
     return this.exportService.getExportStats(filters);
   }
@@ -29,7 +33,11 @@ export class ExportController {
   ): Promise<void> {
     const filters: ExportFilters = {};
     if (dateDebut) filters.dateDebut = new Date(dateDebut);
-    if (dateFin) filters.dateFin = new Date(dateFin);
+    if (dateFin) {
+      const endOfDay = new Date(dateFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.dateFin = endOfDay;
+    }
 
     const data = await this.exportService.getSortiesStock(filters);
 
@@ -55,7 +63,11 @@ export class ExportController {
   ): Promise<void> {
     const filters: ExportFilters = {};
     if (dateDebut) filters.dateDebut = new Date(dateDebut);
-    if (dateFin) filters.dateFin = new Date(dateFin);
+    if (dateFin) {
+      const endOfDay = new Date(dateFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.dateFin = endOfDay;
+    }
 
     const data = await this.exportService.getDotationsCarburant(filters);
 
@@ -81,7 +93,11 @@ export class ExportController {
   ): Promise<void> {
     const filters: ExportFilters = {};
     if (dateDebut) filters.dateDebut = new Date(dateDebut);
-    if (dateFin) filters.dateFin = new Date(dateFin);
+    if (dateFin) {
+      const endOfDay = new Date(dateFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.dateFin = endOfDay;
+    }
 
     const data = await this.exportService.getBonsTransport(filters);
 
@@ -107,7 +123,11 @@ export class ExportController {
   ): Promise<void> {
     const filters: ExportFilters = {};
     if (dateDebut) filters.dateDebut = new Date(dateDebut);
-    if (dateFin) filters.dateFin = new Date(dateFin);
+    if (dateFin) {
+      const endOfDay = new Date(dateFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.dateFin = endOfDay;
+    }
 
     const data = await this.exportService.getBonsLocation(filters);
 
@@ -133,7 +153,11 @@ export class ExportController {
   ): Promise<void> {
     const filters: ExportFilters = {};
     if (dateDebut) filters.dateDebut = new Date(dateDebut);
-    if (dateFin) filters.dateFin = new Date(dateFin);
+    if (dateFin) {
+      const endOfDay = new Date(dateFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.dateFin = endOfDay;
+    }
 
     const data = await this.exportService.getPannes(filters);
 
@@ -159,7 +183,11 @@ export class ExportController {
   ): Promise<void> {
     const filters: ExportFilters = {};
     if (dateDebut) filters.dateDebut = new Date(dateDebut);
-    if (dateFin) filters.dateFin = new Date(dateFin);
+    if (dateFin) {
+      const endOfDay = new Date(dateFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.dateFin = endOfDay;
+    }
 
     const data = await this.exportService.getEntreesStock(filters);
 
@@ -185,7 +213,11 @@ export class ExportController {
   ): Promise<void> {
     const filters: ExportFilters = {};
     if (dateDebut) filters.dateDebut = new Date(dateDebut);
-    if (dateFin) filters.dateFin = new Date(dateFin);
+    if (dateFin) {
+      const endOfDay = new Date(dateFin);
+      endOfDay.setHours(23, 59, 59, 999);
+      filters.dateFin = endOfDay;
+    }
 
     const data = await this.exportService.getApprovisionnementsCuve(filters);
 

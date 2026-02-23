@@ -157,7 +157,7 @@ export default function GpsPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Suivi GPS</h1>
           <p className="text-gray-600 dark:text-gray-400">Localisation en temps réel des véhicules</p>

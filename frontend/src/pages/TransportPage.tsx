@@ -637,7 +637,7 @@ export default function TransportPage() {
     return (
       <div>
         <Breadcrumb />
-        <div className="flex justify-between items-center mb-6">
+        <div className="page-header">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Gestion du Transport</h1>
             <p className="text-gray-600">Bons de transport et missions</p>
@@ -652,7 +652,7 @@ export default function TransportPage() {
     <div>
       <Breadcrumb />
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gestion du Transport</h1>
           <p className="text-gray-600">Bons de transport et missions</p>

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { BullModule } from '@nestjs/bullmq';
 
 import configuration from './config/configuration';
@@ -100,6 +101,7 @@ import { AuditModule } from './audit/audit.module';
         const databaseUrl = configService.get('database.url');
         const baseConfig = {
           type: 'postgres' as const,
+          namingStrategy: new SnakeNamingStrategy(),
           entities: [
             User,
             Camion,
@@ -154,7 +156,7 @@ import { AuditModule } from './audit/audit.module';
             MouvementCaisse,
           ],
           synchronize: false,
-          logging: process.env.NODE_ENV === 'development',
+          logging: true,
         };
 
         if (databaseUrl) {
@@ -217,4 +219,4 @@ import { AuditModule } from './audit/audit.module';
     AuditModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }
