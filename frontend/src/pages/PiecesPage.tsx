@@ -660,8 +660,8 @@ export default function PiecesPage() {
           <button
             onClick={() => setActiveTab('catalogue')}
             className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'catalogue'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
           >
             Catalogue
@@ -669,8 +669,8 @@ export default function PiecesPage() {
           <button
             onClick={() => setActiveTab('stock')}
             className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'stock'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
           >
             État du stock
@@ -678,8 +678,8 @@ export default function PiecesPage() {
           <button
             onClick={() => setActiveTab('entrees')}
             className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'entrees'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
           >
             Entrées
@@ -687,8 +687,8 @@ export default function PiecesPage() {
           <button
             onClick={() => setActiveTab('sorties')}
             className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'sorties'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
           >
             Sorties
@@ -696,8 +696,8 @@ export default function PiecesPage() {
           <button
             onClick={() => setActiveTab('mouvements')}
             className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'mouvements'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
           >
             Mouvements
@@ -705,8 +705,8 @@ export default function PiecesPage() {
           <button
             onClick={() => setActiveTab('fournisseurs')}
             className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'fournisseurs'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
           >
             Fournisseurs
@@ -714,8 +714,8 @@ export default function PiecesPage() {
           <button
             onClick={() => setActiveTab('alertes')}
             className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${activeTab === 'alertes'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
           >
             Alertes
@@ -730,8 +730,8 @@ export default function PiecesPage() {
 
       {/* Catalogue Tab */}
       {activeTab === 'catalogue' && (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+          <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">N° Pièce</th>
@@ -794,7 +794,7 @@ export default function PiecesPage() {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
@@ -821,8 +821,8 @@ export default function PiecesPage() {
               Imprimer
             </button>
           </div>
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+            <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th>
@@ -851,15 +851,15 @@ export default function PiecesPage() {
                   </tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         </div>
       )}
 
       {/* Entrées Tab */}
       {activeTab === 'entrees' && (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+          <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">N° Bon</th>
@@ -880,8 +880,8 @@ export default function PiecesPage() {
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded text-sm ${entree.typeEntree === 'ACHAT' ? 'bg-green-100 text-green-800' :
-                        entree.typeEntree === 'RETOUR' ? 'bg-orange-100 text-orange-800' :
-                          'bg-gray-100 text-gray-800'
+                      entree.typeEntree === 'RETOUR' ? 'bg-orange-100 text-orange-800' :
+                        'bg-gray-100 text-gray-800'
                       }`}>
                       {typeEntreeLabels[entree.typeEntree]}
                     </span>
@@ -913,14 +913,14 @@ export default function PiecesPage() {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
       {/* Sorties Tab */}
       {activeTab === 'sorties' && (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+          <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">N° Bon</th>
@@ -945,9 +945,9 @@ export default function PiecesPage() {
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded text-sm ${sortie.motif === 'PANNE' ? 'bg-red-100 text-red-800' :
-                        sortie.motif === 'REPARATION' ? 'bg-orange-100 text-orange-800' :
-                          sortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
-                            'bg-gray-100 text-gray-800'
+                      sortie.motif === 'REPARATION' ? 'bg-orange-100 text-orange-800' :
+                        sortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
                       }`}>
                       {motifLabels[sortie.motif]}
                     </span>
@@ -976,7 +976,7 @@ export default function PiecesPage() {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
@@ -1050,8 +1050,8 @@ export default function PiecesPage() {
               </button>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+            <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
@@ -1098,7 +1098,7 @@ export default function PiecesPage() {
                   </tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         </div>
       )}
@@ -1114,8 +1114,8 @@ export default function PiecesPage() {
               + Nouveau fournisseur
             </button>
           </div>
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+            <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
@@ -1158,7 +1158,7 @@ export default function PiecesPage() {
                   </tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         </div>
       )}
@@ -1396,9 +1396,9 @@ export default function PiecesPage() {
                 </p>
               </div>
               <span className={`px-3 py-1 rounded text-sm ${selectedSortie.motif === 'PANNE' ? 'bg-red-100 text-red-800' :
-                  selectedSortie.motif === 'REPARATION' ? 'bg-orange-100 text-orange-800' :
-                    selectedSortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
-                      'bg-gray-100 text-gray-800'
+                selectedSortie.motif === 'REPARATION' ? 'bg-orange-100 text-orange-800' :
+                  selectedSortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
+                    'bg-gray-100 text-gray-800'
                 }`}>
                 {motifLabels[selectedSortie.motif]}
               </span>
@@ -1639,8 +1639,8 @@ export default function PiecesPage() {
                 </p>
               </div>
               <span className={`px-3 py-1 rounded text-sm ${selectedEntree.typeEntree === 'ACHAT' ? 'bg-green-100 text-green-800' :
-                  selectedEntree.typeEntree === 'RETOUR' ? 'bg-orange-100 text-orange-800' :
-                    'bg-gray-100 text-gray-800'
+                selectedEntree.typeEntree === 'RETOUR' ? 'bg-orange-100 text-orange-800' :
+                  'bg-gray-100 text-gray-800'
                 }`}>
                 {typeEntreeLabels[selectedEntree.typeEntree]}
               </span>

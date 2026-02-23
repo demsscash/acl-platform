@@ -409,7 +409,7 @@ export default function LocationPage() {
                 <td class="amount">${Number(montantEstime).toLocaleString('fr-FR')} FCFA</td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         ${bon.notes ? `
@@ -801,7 +801,7 @@ export default function LocationPage() {
             {filteredAndSortedBons.length} résultat(s) trouvé(s)
           </div>
         )}
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th
@@ -963,7 +963,7 @@ export default function LocationPage() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
 
         {/* Pagination */}
         {filteredAndSortedBons.length > 0 && (

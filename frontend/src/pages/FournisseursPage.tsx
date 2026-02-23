@@ -248,7 +248,7 @@ export default function FournisseursPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
         {/* Export buttons */}
         <div className="p-4 border-b border-gray-200 flex justify-end gap-2">
           <button
@@ -303,7 +303,7 @@ export default function FournisseursPage() {
             Imprimer
           </button>
         </div>
-        <table className="min-w-full divide-y divide-gray-200">
+        <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
@@ -377,7 +377,7 @@ export default function FournisseursPage() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       {/* Modal Create/Edit */}
@@ -515,7 +515,7 @@ export default function FournisseursPage() {
             {/* Historique des entrées */}
             <h3 className="font-medium text-gray-900 mb-3">Historique des entrées</h3>
             <div className="bg-white border rounded-lg overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200">
+              <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">N° Bon</th>
@@ -566,7 +566,7 @@ export default function FournisseursPage() {
                     </tr>
                   )}
                 </tbody>
-              </table>
+              </table></div>
             </div>
 
             <div className="flex justify-end mt-6">

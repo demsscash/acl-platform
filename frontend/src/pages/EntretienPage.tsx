@@ -520,576 +520,583 @@ export default function EntretienPage() {
                 </tr>
               ))}
             </tbody>
+          </tbody>
           </table>
-        ) : (
-          <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-            Aucune maintenance trouvee
-          </div>
-        )}
-      </div>
+    </div>
+  ) : (
+    <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+      Aucune maintenance trouvee
+    </div>
+  )
+}
+      </div >
 
-      {/* Create/Edit Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                {selectedMaintenance ? 'Modifier la maintenance' : 'Nouvelle maintenance'}
-              </h2>
-            </div>
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Camion *</label>
-                  <select
-                    value={formData.camionId}
-                    onChange={(e) => setFormData({ ...formData, camionId: parseInt(e.target.value) })}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  >
-                    <option value={0}>Selectionner un camion</option>
-                    {camions?.map((c) => (
-                      <option key={c.id} value={c.id}>{c.immatriculation} - {c.marque}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type *</label>
-                  <select
-                    value={formData.type}
-                    onChange={(e) => setFormData({ ...formData, type: e.target.value as TypeMaintenance })}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  >
-                    {Object.entries(TYPE_MAINTENANCE_LABELS).map(([key, label]) => (
-                      <option key={key} value={key}>{label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre *</label>
-                <input
-                  type="text"
-                  value={formData.titre}
-                  onChange={(e) => setFormData({ ...formData, titre: e.target.value })}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date prevue *</label>
-                  <input
-                    type="date"
-                    value={formData.datePlanifiee}
-                    onChange={(e) => setFormData({ ...formData, datePlanifiee: e.target.value })}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Priorite</label>
-                  <select
-                    value={formData.priorite}
-                    onChange={(e) => setFormData({ ...formData, priorite: e.target.value as PrioriteMaintenance })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  >
-                    {Object.entries(PRIORITE_MAINTENANCE_LABELS).map(([key, label]) => (
-                      <option key={key} value={key}>{label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kilometrage actuel</label>
-                  <input
-                    type="number"
-                    value={formData.kilometrageActuel || ''}
-                    onChange={(e) => setFormData({ ...formData, kilometrageActuel: parseInt(e.target.value) || undefined })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prochain kilometrage</label>
-                  <input
-                    type="number"
-                    value={formData.prochainKilometrage || ''}
-                    onChange={(e) => setFormData({ ...formData, prochainKilometrage: parseInt(e.target.value) || undefined })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prestataire externe</label>
-                <input
-                  type="text"
-                  value={formData.prestataireExterne}
-                  onChange={(e) => setFormData({ ...formData, prestataireExterne: e.target.value })}
-                  placeholder="Nom du garage externe si applicable"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              {canSeeFinancial && selectedMaintenance && (
-                <>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cout pieces</label>
-                      <input
-                        type="number"
-                        value={formData.coutPieces || 0}
-                        onChange={(e) => setFormData({ ...formData, coutPieces: parseFloat(e.target.value) || 0 })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cout main d'oeuvre</label>
-                      <input
-                        type="number"
-                        value={formData.coutMainOeuvre || 0}
-                        onChange={(e) => setFormData({ ...formData, coutMainOeuvre: parseFloat(e.target.value) || 0 })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cout externe</label>
-                      <input
-                        type="number"
-                        value={formData.coutExterne || 0}
-                        onChange={(e) => setFormData({ ...formData, coutExterne: parseFloat(e.target.value) || 0 })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {/* Pieces utilisees */}
-              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                  Pieces changees / utilisees
-                </label>
-
-                {/* Liste des pieces ajoutees */}
-                {formData.piecesUtilisees && formData.piecesUtilisees.length > 0 && (
-                  <div className="mb-4 space-y-2">
-                    {formData.piecesUtilisees.map((piece, index) => (
-                      <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-                        <div className="flex-1">
-                          <p className="font-medium text-gray-900 dark:text-white">{piece.designation}</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Ref: {piece.reference} | Qte: {piece.quantite} | Prix: {piece.prixUnitaire?.toLocaleString() || 0} FCFA
-                          </p>
-                          <p className="text-xs text-blue-600 dark:text-blue-400">
-                            Provenance: {SOURCE_PIECE_LABELS[piece.source] || piece.source}
-                            {piece.sourceDetail && ` - ${piece.sourceDetail}`}
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => handleRemovePiece(index)}
-                          className="text-red-600 hover:text-red-700 ml-2"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Toggle saisie libre / catalogue */}
-                <div className="mb-3 flex items-center gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={saisieLibre}
-                      onChange={(e) => setSaisieLibre(e.target.checked)}
-                      className="rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
-                    />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Saisie libre (piece hors catalogue)</span>
-                  </label>
-                </div>
-
-                {/* Selection piece du catalogue OU saisie libre */}
-                <div className="space-y-3">
-                  {!saisieLibre ? (
-                    <div>
-                      <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Selectionner une piece du catalogue</label>
-                      <select
-                        value={newPiece.pieceId || ''}
-                        onChange={(e) => {
-                          const piece = cataloguePieces?.find(p => p.id === parseInt(e.target.value));
-                          if (piece) handleSelectPieceFromCatalogue(piece);
-                        }}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                      >
-                        <option value="">-- Choisir une piece --</option>
-                        {cataloguePieces?.filter(p => p.actif).map((piece) => (
-                          <option key={piece.id} value={piece.id}>
-                            {piece.reference} - {piece.designation}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        value={newPiece.reference}
-                        onChange={(e) => setNewPiece({ ...newPiece, reference: e.target.value })}
-                        placeholder="Reference"
-                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                      />
-                      <input
-                        type="text"
-                        value={newPiece.designation}
-                        onChange={(e) => setNewPiece({ ...newPiece, designation: e.target.value })}
-                        placeholder="Designation"
-                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                      />
-                    </div>
-                  )}
-
-                  {/* Quantite et Prix */}
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Quantite</label>
-                      <input
-                        type="number"
-                        value={newPiece.quantite}
-                        onChange={(e) => setNewPiece({ ...newPiece, quantite: parseInt(e.target.value) || 1 })}
-                        min="1"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Prix unitaire (FCFA)</label>
-                      <input
-                        type="number"
-                        value={newPiece.prixUnitaire}
-                        onChange={(e) => setNewPiece({ ...newPiece, prixUnitaire: parseFloat(e.target.value) || 0 })}
-                        min="0"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Source / Provenance */}
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Provenance *</label>
-                      <select
-                        value={newPiece.source}
-                        onChange={(e) => setNewPiece({ ...newPiece, source: e.target.value, sourceDetail: '' })}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                      >
-                        {Object.entries(SOURCE_PIECE_LABELS).map(([key, label]) => (
-                          <option key={key} value={key}>{label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
-                        {newPiece.source === 'FOURNISSEUR' ? 'Fournisseur' :
-                         newPiece.source === 'AUTRE_CAMION' ? 'Camion d\'origine' :
-                         'Detail (optionnel)'}
-                      </label>
-                      {newPiece.source === 'FOURNISSEUR' ? (
-                        <select
-                          value={newPiece.sourceDetail}
-                          onChange={(e) => setNewPiece({ ...newPiece, sourceDetail: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                        >
-                          <option value="">-- Choisir un fournisseur --</option>
-                          {fournisseurs?.filter(f => f.actif).map((f) => (
-                            <option key={f.id} value={f.raisonSociale}>{f.raisonSociale}</option>
-                          ))}
-                          <option value="AUTRE">Autre fournisseur</option>
-                        </select>
-                      ) : newPiece.source === 'AUTRE_CAMION' ? (
-                        <select
-                          value={newPiece.sourceDetail}
-                          onChange={(e) => setNewPiece({ ...newPiece, sourceDetail: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                        >
-                          <option value="">-- Choisir le camion --</option>
-                          {camions?.map((c) => (
-                            <option key={c.id} value={c.immatriculation}>{c.immatriculation} - {c.marque}</option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type="text"
-                          value={newPiece.sourceDetail}
-                          onChange={(e) => setNewPiece({ ...newPiece, sourceDetail: e.target.value })}
-                          placeholder="Precision optionnelle"
-                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                        />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Bouton Ajouter */}
-                  <button
-                    type="button"
-                    onClick={handleAddPiece}
-                    disabled={!newPiece.reference || !newPiece.designation}
-                    className="w-full px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    Ajouter cette piece
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Travaux effectues</label>
-                <textarea
-                  value={formData.travauxEffectues}
-                  onChange={(e) => setFormData({ ...formData, travauxEffectues: e.target.value })}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observations</label>
-                <textarea
-                  value={formData.observations}
-                  onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
-                  rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => { setShowModal(false); setSelectedMaintenance(null); resetForm(); }}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  disabled={createMutation.isPending || updateMutation.isPending}
-                  className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-medium disabled:opacity-50"
-                >
-                  {createMutation.isPending || updateMutation.isPending ? 'Enregistrement...' : 'Enregistrer'}
-                </button>
-              </div>
-            </form>
-          </div>
+  {/* Create/Edit Modal */ }
+{
+  showModal && (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {selectedMaintenance ? 'Modifier la maintenance' : 'Nouvelle maintenance'}
+          </h2>
         </div>
-      )}
-
-      {/* Detail Modal */}
-      {showDetailModal && selectedMaintenance && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedMaintenance.numero}</h2>
-                <p className="text-gray-500 dark:text-gray-400">{selectedMaintenance.titre}</p>
-              </div>
-              <button
-                onClick={handleCloseDetail}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Camion *</label>
+              <select
+                value={formData.camionId}
+                onChange={(e) => setFormData({ ...formData, camionId: parseInt(e.target.value) })}
+                required
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+                <option value={0}>Selectionner un camion</option>
+                {camions?.map((c) => (
+                  <option key={c.id} value={c.id}>{c.immatriculation} - {c.marque}</option>
+                ))}
+              </select>
             </div>
-            <div className="p-6 space-y-6">
-              {/* Status & Priority */}
-              <div className="flex gap-3">
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatutBadgeClass(selectedMaintenance.statut)}`}>
-                  {STATUT_MAINTENANCE_LABELS[selectedMaintenance.statut]}
-                </span>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getPrioriteBadgeClass(selectedMaintenance.priorite)}`}>
-                  {PRIORITE_MAINTENANCE_LABELS[selectedMaintenance.priorite]}
-                </span>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type *</label>
+              <select
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as TypeMaintenance })}
+                required
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                {Object.entries(TYPE_MAINTENANCE_LABELS).map(([key, label]) => (
+                  <option key={key} value={key}>{label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre *</label>
+            <input
+              type="text"
+              value={formData.titre}
+              onChange={(e) => setFormData({ ...formData, titre: e.target.value })}
+              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date prevue *</label>
+              <input
+                type="date"
+                value={formData.datePlanifiee}
+                onChange={(e) => setFormData({ ...formData, datePlanifiee: e.target.value })}
+                required
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Priorite</label>
+              <select
+                value={formData.priorite}
+                onChange={(e) => setFormData({ ...formData, priorite: e.target.value as PrioriteMaintenance })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                {Object.entries(PRIORITE_MAINTENANCE_LABELS).map(([key, label]) => (
+                  <option key={key} value={key}>{label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kilometrage actuel</label>
+              <input
+                type="number"
+                value={formData.kilometrageActuel || ''}
+                onChange={(e) => setFormData({ ...formData, kilometrageActuel: parseInt(e.target.value) || undefined })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prochain kilometrage</label>
+              <input
+                type="number"
+                value={formData.prochainKilometrage || ''}
+                onChange={(e) => setFormData({ ...formData, prochainKilometrage: parseInt(e.target.value) || undefined })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prestataire externe</label>
+            <input
+              type="text"
+              value={formData.prestataireExterne}
+              onChange={(e) => setFormData({ ...formData, prestataireExterne: e.target.value })}
+              placeholder="Nom du garage externe si applicable"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+          </div>
+
+          {canSeeFinancial && selectedMaintenance && (
+            <>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cout pieces</label>
+                  <input
+                    type="number"
+                    value={formData.coutPieces || 0}
+                    onChange={(e) => setFormData({ ...formData, coutPieces: parseFloat(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cout main d'oeuvre</label>
+                  <input
+                    type="number"
+                    value={formData.coutMainOeuvre || 0}
+                    onChange={(e) => setFormData({ ...formData, coutMainOeuvre: parseFloat(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cout externe</label>
+                  <input
+                    type="number"
+                    value={formData.coutExterne || 0}
+                    onChange={(e) => setFormData({ ...formData, coutExterne: parseFloat(e.target.value) || 0 })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
               </div>
+            </>
+          )}
 
-              {/* Info Grid */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Camion</p>
-                  <p className="font-medium text-gray-900 dark:text-white">
-                    {selectedMaintenance.camion?.immatriculation} - {selectedMaintenance.camion?.marque}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Type</p>
-                  <p className="font-medium text-gray-900 dark:text-white">
-                    {TYPE_MAINTENANCE_LABELS[selectedMaintenance.type]}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Date prevue</p>
-                  <p className="font-medium text-gray-900 dark:text-white">
-                    {new Date(selectedMaintenance.datePlanifiee).toLocaleDateString('fr-FR')}
-                  </p>
-                </div>
-                {selectedMaintenance.dateDebut && (
-                  <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Date debut</p>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {new Date(selectedMaintenance.dateDebut).toLocaleDateString('fr-FR')}
-                    </p>
-                  </div>
-                )}
-                {selectedMaintenance.dateFin && (
-                  <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Date fin</p>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {new Date(selectedMaintenance.dateFin).toLocaleDateString('fr-FR')}
-                    </p>
-                  </div>
-                )}
-                {selectedMaintenance.kilometrageActuel && (
-                  <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Kilometrage</p>
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {selectedMaintenance.kilometrageActuel.toLocaleString()} km
-                    </p>
-                  </div>
-                )}
-              </div>
+          {/* Pieces utilisees */}
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              Pieces changees / utilisees
+            </label>
 
-              {/* Description */}
-              {selectedMaintenance.description && (
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Description</p>
-                  <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{selectedMaintenance.description}</p>
-                </div>
-              )}
-
-              {/* Travaux */}
-              {selectedMaintenance.travauxEffectues && (
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Travaux effectues</p>
-                  <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{selectedMaintenance.travauxEffectues}</p>
-                </div>
-              )}
-
-              {/* Pieces utilisees */}
-              {selectedMaintenance.piecesUtilisees && selectedMaintenance.piecesUtilisees.length > 0 && (
-                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-                  <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-3">
-                    Pieces changees ({selectedMaintenance.piecesUtilisees.length})
-                  </p>
-                  <div className="space-y-2">
-                    {selectedMaintenance.piecesUtilisees.map((piece, index) => (
-                      <div key={index} className="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <p className="font-medium text-gray-900 dark:text-white">{piece.designation}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Ref: {piece.reference}</p>
-                            <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                              Provenance: {SOURCE_PIECE_LABELS[piece.source] || piece.source || 'Non specifie'}
-                              {piece.sourceDetail && ` - ${piece.sourceDetail}`}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-gray-900 dark:text-white">x{piece.quantite}</p>
-                            {canSeeFinancial && (
-                              <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {(piece.quantite * (piece.prixUnitaire || 0)).toLocaleString()} FCFA
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  {canSeeFinancial && (
-                    <div className="mt-3 pt-3 border-t border-blue-200 dark:border-blue-800 text-right">
-                      <p className="text-sm text-blue-600 dark:text-blue-400">
-                        Total pieces: {selectedMaintenance.piecesUtilisees.reduce((sum, p) => sum + (p.quantite * (p.prixUnitaire || 0)), 0).toLocaleString()} FCFA
+            {/* Liste des pieces ajoutees */}
+            {formData.piecesUtilisees && formData.piecesUtilisees.length > 0 && (
+              <div className="mb-4 space-y-2">
+                {formData.piecesUtilisees.map((piece, index) => (
+                  <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white">{piece.designation}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        Ref: {piece.reference} | Qte: {piece.quantite} | Prix: {piece.prixUnitaire?.toLocaleString() || 0} FCFA
+                      </p>
+                      <p className="text-xs text-blue-600 dark:text-blue-400">
+                        Provenance: {SOURCE_PIECE_LABELS[piece.source] || piece.source}
+                        {piece.sourceDetail && ` - ${piece.sourceDetail}`}
                       </p>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemovePiece(index)}
+                      className="text-red-600 hover:text-red-700 ml-2"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Toggle saisie libre / catalogue */}
+            <div className="mb-3 flex items-center gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={saisieLibre}
+                  onChange={(e) => setSaisieLibre(e.target.checked)}
+                  className="rounded border-gray-300 text-yellow-500 focus:ring-yellow-500"
+                />
+                <span className="text-sm text-gray-600 dark:text-gray-400">Saisie libre (piece hors catalogue)</span>
+              </label>
+            </div>
+
+            {/* Selection piece du catalogue OU saisie libre */}
+            <div className="space-y-3">
+              {!saisieLibre ? (
+                <div>
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Selectionner une piece du catalogue</label>
+                  <select
+                    value={newPiece.pieceId || ''}
+                    onChange={(e) => {
+                      const piece = cataloguePieces?.find(p => p.id === parseInt(e.target.value));
+                      if (piece) handleSelectPieceFromCatalogue(piece);
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  >
+                    <option value="">-- Choisir une piece --</option>
+                    {cataloguePieces?.filter(p => p.actif).map((piece) => (
+                      <option key={piece.id} value={piece.id}>
+                        {piece.reference} - {piece.designation}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    value={newPiece.reference}
+                    onChange={(e) => setNewPiece({ ...newPiece, reference: e.target.value })}
+                    placeholder="Reference"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  />
+                  <input
+                    type="text"
+                    value={newPiece.designation}
+                    onChange={(e) => setNewPiece({ ...newPiece, designation: e.target.value })}
+                    placeholder="Designation"
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+              )}
+
+              {/* Quantite et Prix */}
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Quantite</label>
+                  <input
+                    type="number"
+                    value={newPiece.quantite}
+                    onChange={(e) => setNewPiece({ ...newPiece, quantite: parseInt(e.target.value) || 1 })}
+                    min="1"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Prix unitaire (FCFA)</label>
+                  <input
+                    type="number"
+                    value={newPiece.prixUnitaire}
+                    onChange={(e) => setNewPiece({ ...newPiece, prixUnitaire: parseFloat(e.target.value) || 0 })}
+                    min="0"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Source / Provenance */}
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Provenance *</label>
+                  <select
+                    value={newPiece.source}
+                    onChange={(e) => setNewPiece({ ...newPiece, source: e.target.value, sourceDetail: '' })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  >
+                    {Object.entries(SOURCE_PIECE_LABELS).map(([key, label]) => (
+                      <option key={key} value={key}>{label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    {newPiece.source === 'FOURNISSEUR' ? 'Fournisseur' :
+                      newPiece.source === 'AUTRE_CAMION' ? 'Camion d\'origine' :
+                        'Detail (optionnel)'}
+                  </label>
+                  {newPiece.source === 'FOURNISSEUR' ? (
+                    <select
+                      value={newPiece.sourceDetail}
+                      onChange={(e) => setNewPiece({ ...newPiece, sourceDetail: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                    >
+                      <option value="">-- Choisir un fournisseur --</option>
+                      {fournisseurs?.filter(f => f.actif).map((f) => (
+                        <option key={f.id} value={f.raisonSociale}>{f.raisonSociale}</option>
+                      ))}
+                      <option value="AUTRE">Autre fournisseur</option>
+                    </select>
+                  ) : newPiece.source === 'AUTRE_CAMION' ? (
+                    <select
+                      value={newPiece.sourceDetail}
+                      onChange={(e) => setNewPiece({ ...newPiece, sourceDetail: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                    >
+                      <option value="">-- Choisir le camion --</option>
+                      {camions?.map((c) => (
+                        <option key={c.id} value={c.immatriculation}>{c.immatriculation} - {c.marque}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={newPiece.sourceDetail}
+                      onChange={(e) => setNewPiece({ ...newPiece, sourceDetail: e.target.value })}
+                      placeholder="Precision optionnelle"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                    />
                   )}
                 </div>
-              )}
-
-              {/* Costs */}
-              {canSeeFinancial && (
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Couts</p>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Pieces</p>
-                      <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(Number(selectedMaintenance.coutPieces))}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Main d'oeuvre</p>
-                      <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(Number(selectedMaintenance.coutMainOeuvre))}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Externe</p>
-                      <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(Number(selectedMaintenance.coutExterne))}</p>
-                    </div>
-                  </div>
-                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Total</p>
-                    <p className="text-lg font-bold text-gray-900 dark:text-white">
-                      {formatCurrency(Number(selectedMaintenance.coutPieces) + Number(selectedMaintenance.coutMainOeuvre) + Number(selectedMaintenance.coutExterne))}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Observations */}
-              {selectedMaintenance.observations && (
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Observations</p>
-                  <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{selectedMaintenance.observations}</p>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                {canUpdate && (
-                  <button
-                    onClick={() => { handleCloseDetail(); handleEdit(selectedMaintenance); }}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
-                  >
-                    Modifier
-                  </button>
-                )}
-                <button
-                  onClick={handleCloseDetail}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                >
-                  Fermer
-                </button>
               </div>
+
+              {/* Bouton Ajouter */}
+              <button
+                type="button"
+                onClick={handleAddPiece}
+                disabled={!newPiece.reference || !newPiece.designation}
+                className="w-full px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Ajouter cette piece
+              </button>
             </div>
           </div>
-        </div>
-      )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Travaux effectues</label>
+            <textarea
+              value={formData.travauxEffectues}
+              onChange={(e) => setFormData({ ...formData, travauxEffectues: e.target.value })}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Observations</label>
+            <textarea
+              value={formData.observations}
+              onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
+              rows={2}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => { setShowModal(false); setSelectedMaintenance(null); resetForm(); }}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              disabled={createMutation.isPending || updateMutation.isPending}
+              className="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-lg font-medium disabled:opacity-50"
+            >
+              {createMutation.isPending || updateMutation.isPending ? 'Enregistrement...' : 'Enregistrer'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
+  )
+}
+
+{/* Detail Modal */ }
+{
+  showDetailModal && selectedMaintenance && (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedMaintenance.numero}</h2>
+            <p className="text-gray-500 dark:text-gray-400">{selectedMaintenance.titre}</p>
+          </div>
+          <button
+            onClick={handleCloseDetail}
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div className="p-6 space-y-6">
+          {/* Status & Priority */}
+          <div className="flex gap-3">
+            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatutBadgeClass(selectedMaintenance.statut)}`}>
+              {STATUT_MAINTENANCE_LABELS[selectedMaintenance.statut]}
+            </span>
+            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getPrioriteBadgeClass(selectedMaintenance.priorite)}`}>
+              {PRIORITE_MAINTENANCE_LABELS[selectedMaintenance.priorite]}
+            </span>
+          </div>
+
+          {/* Info Grid */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Camion</p>
+              <p className="font-medium text-gray-900 dark:text-white">
+                {selectedMaintenance.camion?.immatriculation} - {selectedMaintenance.camion?.marque}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Type</p>
+              <p className="font-medium text-gray-900 dark:text-white">
+                {TYPE_MAINTENANCE_LABELS[selectedMaintenance.type]}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Date prevue</p>
+              <p className="font-medium text-gray-900 dark:text-white">
+                {new Date(selectedMaintenance.datePlanifiee).toLocaleDateString('fr-FR')}
+              </p>
+            </div>
+            {selectedMaintenance.dateDebut && (
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Date debut</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  {new Date(selectedMaintenance.dateDebut).toLocaleDateString('fr-FR')}
+                </p>
+              </div>
+            )}
+            {selectedMaintenance.dateFin && (
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Date fin</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  {new Date(selectedMaintenance.dateFin).toLocaleDateString('fr-FR')}
+                </p>
+              </div>
+            )}
+            {selectedMaintenance.kilometrageActuel && (
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Kilometrage</p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  {selectedMaintenance.kilometrageActuel.toLocaleString()} km
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
+          {selectedMaintenance.description && (
+            <div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Description</p>
+              <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{selectedMaintenance.description}</p>
+            </div>
+          )}
+
+          {/* Travaux */}
+          {selectedMaintenance.travauxEffectues && (
+            <div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Travaux effectues</p>
+              <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{selectedMaintenance.travauxEffectues}</p>
+            </div>
+          )}
+
+          {/* Pieces utilisees */}
+          {selectedMaintenance.piecesUtilisees && selectedMaintenance.piecesUtilisees.length > 0 && (
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+              <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-3">
+                Pieces changees ({selectedMaintenance.piecesUtilisees.length})
+              </p>
+              <div className="space-y-2">
+                {selectedMaintenance.piecesUtilisees.map((piece, index) => (
+                  <div key={index} className="bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white">{piece.designation}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Ref: {piece.reference}</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                          Provenance: {SOURCE_PIECE_LABELS[piece.source] || piece.source || 'Non specifie'}
+                          {piece.sourceDetail && ` - ${piece.sourceDetail}`}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-gray-900 dark:text-white">x{piece.quantite}</p>
+                        {canSeeFinancial && (
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {(piece.quantite * (piece.prixUnitaire || 0)).toLocaleString()} FCFA
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {canSeeFinancial && (
+                <div className="mt-3 pt-3 border-t border-blue-200 dark:border-blue-800 text-right">
+                  <p className="text-sm text-blue-600 dark:text-blue-400">
+                    Total pieces: {selectedMaintenance.piecesUtilisees.reduce((sum, p) => sum + (p.quantite * (p.prixUnitaire || 0)), 0).toLocaleString()} FCFA
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Costs */}
+          {canSeeFinancial && (
+            <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Couts</p>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Pieces</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(Number(selectedMaintenance.coutPieces))}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Main d'oeuvre</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(Number(selectedMaintenance.coutMainOeuvre))}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Externe</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{formatCurrency(Number(selectedMaintenance.coutExterne))}</p>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total</p>
+                <p className="text-lg font-bold text-gray-900 dark:text-white">
+                  {formatCurrency(Number(selectedMaintenance.coutPieces) + Number(selectedMaintenance.coutMainOeuvre) + Number(selectedMaintenance.coutExterne))}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Observations */}
+          {selectedMaintenance.observations && (
+            <div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Observations</p>
+              <p className="text-gray-900 dark:text-white whitespace-pre-wrap">{selectedMaintenance.observations}</p>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            {canUpdate && (
+              <button
+                onClick={() => { handleCloseDetail(); handleEdit(selectedMaintenance); }}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+              >
+                Modifier
+              </button>
+            )}
+            <button
+              onClick={handleCloseDetail}
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+    </div >
   );
 }

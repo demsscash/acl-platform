@@ -361,7 +361,7 @@ export default function ClientsPage() {
                 </tr>
               `).join('')}
             </tbody>
-          </table>
+          </table></div>
         ` : ''}
 
         ${data.locations.length > 0 ? `
@@ -397,7 +397,7 @@ export default function ClientsPage() {
                 </tr>
               `}).join('')}
             </tbody>
-          </table>
+          </table></div>
         ` : ''}
 
         <div class="footer">
@@ -570,7 +570,7 @@ export default function ClientsPage() {
             Imprimer
           </button>
         </div>
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Code</th>
@@ -649,7 +649,7 @@ export default function ClientsPage() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       {/* Modal Création/Édition */}
@@ -848,7 +848,7 @@ export default function ClientsPage() {
                       Bons de Transport ({historique.transports.length})
                     </h3>
                     <div className="border dark:border-gray-700 rounded-lg overflow-hidden overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Date</th>
@@ -899,7 +899,7 @@ export default function ClientsPage() {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}
@@ -912,7 +912,7 @@ export default function ClientsPage() {
                       Bons de Location ({historique.locations.length})
                     </h3>
                     <div className="border dark:border-gray-700 rounded-lg overflow-hidden overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Période</th>
@@ -955,7 +955,7 @@ export default function ClientsPage() {
                             );
                           })}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}

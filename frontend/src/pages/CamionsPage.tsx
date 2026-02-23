@@ -540,7 +540,7 @@ export default function CamionsPage() {
       )}
 
       {/* Table */}
-      <div className="table-container">
+      <div className="table-container overflow-x-auto">
         {/* Search and Export */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between gap-4">
           {/* Search Input */}
@@ -639,7 +639,7 @@ export default function CamionsPage() {
             {filteredAndSortedCamions.length} résultat(s) trouvé(s)
           </div>
         )}
-        <div className="table-responsive"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="table-responsive"><div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th
@@ -747,7 +747,7 @@ export default function CamionsPage() {
               </tr>
             )}
           </tbody>
-        </table></div>
+        </table></div></div>
 
         {/* Pagination */}
         {filteredAndSortedCamions.length > 0 && (
@@ -1165,7 +1165,7 @@ export default function CamionsPage() {
                       Bons de Transport ({historique.transports.length})
                     </h3>
                     <div className="border rounded-lg overflow-hidden">
-                      <table className="min-w-full divide-y divide-gray-200">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Date</th>
@@ -1196,7 +1196,7 @@ export default function CamionsPage() {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}
@@ -1209,7 +1209,7 @@ export default function CamionsPage() {
                       Bons de Location ({historique.locations.length})
                     </h3>
                     <div className="border rounded-lg overflow-hidden">
-                      <table className="min-w-full divide-y divide-gray-200">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Date</th>
@@ -1242,7 +1242,7 @@ export default function CamionsPage() {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}
@@ -1255,7 +1255,7 @@ export default function CamionsPage() {
                       Dotations Carburant ({historique.dotations.length})
                     </h3>
                     <div className="border rounded-lg overflow-hidden">
-                      <table className="min-w-full divide-y divide-gray-200">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Date</th>
@@ -1284,7 +1284,7 @@ export default function CamionsPage() {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}
@@ -1297,7 +1297,7 @@ export default function CamionsPage() {
                       Historique des Pannes ({historique.pannes.length})
                     </h3>
                     <div className="border rounded-lg overflow-hidden">
-                      <table className="min-w-full divide-y divide-gray-200">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Date</th>
@@ -1355,7 +1355,7 @@ export default function CamionsPage() {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}
