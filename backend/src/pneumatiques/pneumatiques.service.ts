@@ -120,6 +120,26 @@ export class PneumatiquesService {
     return this.getPneu(pneuId);
   }
 
+  async transfererPneu(
+    pneuId: number,
+    nouveauCamionId: number,
+    position: string,
+    kmInstallation: number,
+  ): Promise<StockPneumatique> {
+    const pneu = await this.getPneu(pneuId);
+
+    // Retire from current truck
+    if (pneu.camionId) {
+      await this.stockRepo.update(pneuId, {
+        camionId: null as any,
+        positionActuelle: null as any,
+      });
+    }
+
+    // Install on new truck
+    return this.installerPneu(pneuId, nouveauCamionId, position, kmInstallation);
+  }
+
   async retirerPneu(pneuId: number, statut?: string): Promise<StockPneumatique> {
     await this.stockRepo.update(pneuId, {
       camionId: null as any,

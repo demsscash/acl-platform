@@ -105,6 +105,13 @@ export const pneumatiquesService = {
     return response.data;
   },
 
+  async transfererPneu(id: number, camionId: number, position: string, kmInstallation: number): Promise<StockPneumatique> {
+    const response = await api.post<StockPneumatique>(`/pneumatiques/stock/${id}/transferer`, {
+      camionId, position, kmInstallation,
+    });
+    return response.data;
+  },
+
   async retirerPneu(id: number, statut?: string): Promise<StockPneumatique> {
     const response = await api.post<StockPneumatique>(`/pneumatiques/stock/${id}/retirer`, { statut });
     return response.data;
