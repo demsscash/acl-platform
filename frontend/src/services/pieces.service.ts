@@ -82,10 +82,13 @@ export interface CreateSortieDto {
   }[];
 }
 
+export type TypeFournisseur = 'PIECES' | 'PNEUMATIQUES' | 'CARBURANT' | 'GENERAL';
+
 export interface Fournisseur {
   id: number;
   code: string;
   raisonSociale: string;
+  typeFournisseur?: TypeFournisseur;
   adresse?: string;
   telephone?: string;
   email?: string;
@@ -99,6 +102,7 @@ export interface LigneEntree {
   quantite: number;
   prixUnitaire?: number;
   emplacement?: string;
+  etat?: string; // NEUVE | OCCASION
   notes?: string;
 }
 
@@ -141,6 +145,7 @@ export interface CreateEntreeDto {
     quantite: number;
     prixUnitaire?: number;
     emplacement?: string;
+    etat?: string;
   }[];
 }
 

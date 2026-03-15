@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router-dom';
 import chauffeursService from '../services/chauffeurs.service';
+import camionsService from '../services/camions.service';
 import FileUpload from '../components/FileUpload';
 import { exportToCSV, printTable } from '../utils/export';
 import { useToast } from '../components/ui/Toast';
@@ -17,6 +18,8 @@ interface Chauffeur {
   numeroPermis: string;
   typePermis: string;
   dateExpirationPermis?: string;
+  camionAttribueId?: number;
+  camionAttribue?: { id: number; immatriculation: string; marque: string; modele?: string };
   statut: 'DISPONIBLE' | 'EN_MISSION' | 'CONGE' | 'INDISPONIBLE';
   actif: boolean;
   nombreVoyages?: number;
@@ -29,10 +32,11 @@ interface CreateChauffeurDto {
   telephone?: string;
   numeroPermis: string;
   typePermis: string;
+  camionAttribueId?: number | null;
   statut?: 'DISPONIBLE' | 'EN_MISSION' | 'CONGE' | 'INDISPONIBLE';
 }
 
-const typesPermis = ['B', 'C', 'D', 'EC', 'ED'];
+const typesPermis = ['B', 'C', 'CE', 'D', 'EC', 'ED'];
 
 const statutColors = {
   DISPONIBLE: 'bg-green-100 text-green-800',
@@ -162,6 +166,23 @@ export default function ChauffeursPage() {
     queryFn: chauffeursService.getAll,
   });
 
+  const { data: camions } = useQuery({
+    queryKey: ['camions'],
+    queryFn: camionsService.getAll,
+  });
+
+  // Camions disponibles = pas déjà affectés à un autre chauffeur
+  const camionsDisponibles = (camions || []).filter((c: any) => {
+    if (!c.actif) return false;
+    // Si on édite un chauffeur, son propre camion doit rester dans la liste
+    if (editingChauffeur && c.id === editingChauffeur.camionAttribueId) return true;
+    // Exclure les camions déjà affectés à d'autres chauffeurs
+    const dejaAffecte = (chauffeurs || []).some(
+      (ch: Chauffeur) => ch.actif && ch.camionAttribueId === c.id
+    );
+    return !dejaAffecte;
+  });
+
   const { data: historique, isLoading: loadingHistorique } = useQuery({
     queryKey: ['chauffeur-historique', selectedChauffeur?.id],
     queryFn: () => chauffeursService.getHistorique(selectedChauffeur!.id),
@@ -250,6 +271,7 @@ export default function ChauffeursPage() {
       telephone: chauffeur.telephone || '',
       numeroPermis: chauffeur.numeroPermis,
       typePermis: chauffeur.typePermis,
+      camionAttribueId: chauffeur.camionAttribueId || null,
       statut: chauffeur.statut,
     });
     setShowModal(true);
@@ -1010,6 +1032,21 @@ export default function ChauffeursPage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     placeholder="+221 77 123 45 67"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Camion attribué</label>
+                  <select
+                    value={formData.camionAttribueId || ''}
+                    onChange={(e) => setFormData({ ...formData, camionAttribueId: e.target.value ? Number(e.target.value) : null })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  >
+                    <option value="">-- Aucun camion --</option>
+                    {camionsDisponibles.map((c: any) => (
+                      <option key={c.id} value={c.id}>
+                        {c.immatriculation} - {c.marque} {c.modele || ''}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>

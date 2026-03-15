@@ -368,6 +368,12 @@ export default function PneumatiquesPage() {
                             >
                               Retirer
                             </button>
+                            <button
+                              onClick={() => handleInstaller(pneu)}
+                              className="text-purple-600 hover:text-purple-800 text-sm"
+                            >
+                              Transférer
+                            </button>
                           </>
                         )}
                         {!pneu.camionId && pneu.statut !== 'REFORME' && (

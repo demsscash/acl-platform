@@ -4,3 +4,4 @@ export { EmptyState } from './EmptyState';
 export { ConfirmModal, useConfirm } from './ConfirmModal';
 export { Breadcrumb } from './Breadcrumb';
 export { Pagination, usePagination } from './Pagination';
+export { SearchableSelect } from './SearchableSelect';

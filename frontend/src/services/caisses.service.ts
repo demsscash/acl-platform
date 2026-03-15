@@ -100,6 +100,15 @@ export const caissesService = {
     return response.data;
   },
 
+  updateMouvement: async (mouvementId: number, data: Partial<CreateMouvementDto>): Promise<MouvementCaisse> => {
+    const response = await api.put(`/caisses/mouvements/${mouvementId}`, data);
+    return response.data;
+  },
+
+  deleteMouvement: async (mouvementId: number): Promise<void> => {
+    await api.delete(`/caisses/mouvements/${mouvementId}`);
+  },
+
   virement: async (data: VirementDto): Promise<MouvementCaisse> => {
     const response = await api.post('/caisses/virement', data);
     return response.data;

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -22,6 +22,7 @@ export class ChauffeursService {
   async findAll(): Promise<(Chauffeur & { nombreVoyages?: number })[]> {
     const chauffeurs = await this.chauffeurRepository.find({
       where: { actif: true },
+      relations: ['camionAttribue'],
       order: { nom: 'ASC', prenom: 'ASC' },
     });
 
@@ -79,14 +80,31 @@ export class ChauffeursService {
   }
 
   async create(data: Partial<Chauffeur>): Promise<Chauffeur> {
+    if (data.camionAttribueId) {
+      await this.validateCamionUnique(data.camionAttribueId);
+    }
     const chauffeur = this.chauffeurRepository.create(data);
     return this.chauffeurRepository.save(chauffeur);
   }
 
   async update(id: number, data: Partial<Chauffeur>): Promise<Chauffeur> {
     const chauffeur = await this.findOne(id);
+    if (data.camionAttribueId && data.camionAttribueId !== chauffeur.camionAttribueId) {
+      await this.validateCamionUnique(data.camionAttribueId, id);
+    }
     Object.assign(chauffeur, data);
     return this.chauffeurRepository.save(chauffeur);
+  }
+
+  private async validateCamionUnique(camionId: number, excludeChauffeurId?: number): Promise<void> {
+    const existing = await this.chauffeurRepository.findOne({
+      where: { camionAttribueId: camionId, actif: true },
+    });
+    if (existing && existing.id !== excludeChauffeurId) {
+      throw new BadRequestException(
+        `Ce camion est déjà attribué au chauffeur ${existing.prenom} ${existing.nom}`,
+      );
+    }
   }
 
   async remove(id: number): Promise<void> {

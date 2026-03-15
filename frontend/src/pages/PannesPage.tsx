@@ -80,6 +80,11 @@ export default function PannesPage() {
     queryFn: pannesService.getStats,
   });
 
+  const { data: alertesPannes } = useQuery({
+    queryKey: ['pannes', 'alertes'],
+    queryFn: pannesService.getAlertes,
+  });
+
   const { data: camions } = useQuery({
     queryKey: ['camions'],
     queryFn: camionsService.getAll,
@@ -325,6 +330,33 @@ export default function PannesPage() {
           </div>
         )}
       </div>
+
+      {/* Alertes pannes > 2 semaines */}
+      {alertesPannes && alertesPannes.length > 0 && (
+        <div className="mb-6 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <h3 className="font-semibold text-red-800 dark:text-red-200">
+              {alertesPannes.length} panne(s) non résolue(s) depuis plus de 2 semaines
+            </h3>
+          </div>
+          <div className="space-y-1">
+            {alertesPannes.map(p => {
+              const jours = Math.floor((Date.now() - new Date(p.datePanne).getTime()) / (1000 * 60 * 60 * 24));
+              return (
+                <div key={p.id} className="flex items-center justify-between text-sm text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/40 rounded px-3 py-1.5">
+                  <span>
+                    <strong>{p.numeroPanne}</strong> - {p.camion?.immatriculation || 'N/A'} - {p.description?.substring(0, 60)}{(p.description?.length || 0) > 60 ? '...' : ''}
+                  </span>
+                  <span className="font-medium whitespace-nowrap ml-2">{jours} jours</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm">

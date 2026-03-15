@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, LessThan, In } from 'typeorm';
 
 import { Panne, StatutPanne, Camion, StatutCamion } from '../database/entities';
 
@@ -142,6 +142,25 @@ export class PannesService {
     }
 
     return this.findOne(id);
+  }
+
+  async getAlertesNonResolues(): Promise<Panne[]> {
+    const deuxSemainesAvant = new Date();
+    deuxSemainesAvant.setDate(deuxSemainesAvant.getDate() - 14);
+
+    return this.panneRepository.find({
+      where: {
+        datePanne: LessThan(deuxSemainesAvant),
+        statut: In([
+          StatutPanne.DECLAREE,
+          StatutPanne.EN_DIAGNOSTIC,
+          StatutPanne.EN_ATTENTE_PIECES,
+          StatutPanne.EN_REPARATION,
+        ]),
+      },
+      relations: ['camion', 'chauffeur'],
+      order: { datePanne: 'ASC' },
+    });
   }
 
   async getStats(): Promise<{

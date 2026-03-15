@@ -102,6 +102,22 @@ export class CaissesController {
     return this.caissesService.addMouvement(+id, dto, req.user.id);
   }
 
+  @Put('mouvements/:mouvementId')
+  @ApiOperation({ summary: 'Modifier un mouvement de caisse' })
+  updateMouvement(
+    @Param('mouvementId') mouvementId: string,
+    @Body() dto: Partial<CreateMouvementDto>,
+    @Request() req: any,
+  ) {
+    return this.caissesService.updateMouvement(+mouvementId, dto, req.user.id);
+  }
+
+  @Delete('mouvements/:mouvementId')
+  @ApiOperation({ summary: 'Supprimer un mouvement de caisse' })
+  deleteMouvement(@Param('mouvementId') mouvementId: string) {
+    return this.caissesService.deleteMouvement(+mouvementId);
+  }
+
   @Post('virement')
   @ApiOperation({ summary: 'Effectuer un virement entre caisses' })
   virement(@Body() dto: VirementDto, @Request() req: any) {

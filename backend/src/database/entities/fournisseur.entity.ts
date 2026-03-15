@@ -5,6 +5,13 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 
+export enum TypeFournisseur {
+  PIECES = 'PIECES',
+  PNEUMATIQUES = 'PNEUMATIQUES',
+  CARBURANT = 'CARBURANT',
+  GENERAL = 'GENERAL',
+}
+
 @Entity('fournisseurs')
 export class Fournisseur {
   @PrimaryGeneratedColumn()
@@ -15,6 +22,9 @@ export class Fournisseur {
 
   @Column({ name: 'raison_sociale', length: 200 })
   raisonSociale: string;
+
+  @Column({ name: 'type_fournisseur', type: 'varchar', length: 20, default: 'GENERAL' })
+  typeFournisseur: string;
 
   @Column({ type: 'text', nullable: true })
   adresse: string;

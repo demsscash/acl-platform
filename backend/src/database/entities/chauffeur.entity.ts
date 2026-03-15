@@ -19,6 +19,7 @@ export enum StatutChauffeur {
 export enum TypePermis {
   B = 'B',
   C = 'C',
+  CE = 'CE',
   D = 'D',
   EC = 'EC',
   ED = 'ED',

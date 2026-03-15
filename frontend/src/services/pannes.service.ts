@@ -102,6 +102,11 @@ export const pannesService = {
     return response.data;
   },
 
+  async getAlertes(): Promise<Panne[]> {
+    const response = await api.get<Panne[]>('/pannes/alertes');
+    return response.data;
+  },
+
   async create(data: CreatePanneDto): Promise<Panne> {
     const response = await api.post<Panne>('/pannes', data);
     return response.data;

@@ -7,7 +7,7 @@ import chauffeursService from '../services/chauffeurs.service';
 import carburantService from '../services/carburant.service';
 import { exportToCSV, printTable } from '../utils/export';
 import { useToast } from '../components/ui/Toast';
-import { SkeletonTable, Breadcrumb, Pagination } from '../components/ui';
+import { SkeletonTable, Breadcrumb, Pagination, SearchableSelect } from '../components/ui';
 import { useEscapeKey } from '../hooks/useKeyboardShortcuts';
 import { useAuthStore } from '../stores/auth.store';
 
@@ -33,6 +33,7 @@ interface BonTransport {
   fraisDepannage?: number;
   fraisAutres?: number;
   fraisAutresDescription?: string;
+  montantCarburant?: number;
   statut: 'BROUILLON' | 'EN_COURS' | 'LIVRE' | 'TERMINE' | 'ANNULE' | 'FACTURE';
   notes?: string;
 }
@@ -54,6 +55,7 @@ interface CreateBonDto {
   fraisDepannage?: number;
   fraisAutres?: number;
   fraisAutresDescription?: string;
+  montantCarburant?: number;
   notes?: string;
 }
 
@@ -327,8 +329,12 @@ export default function TransportPage() {
         },
       });
     } else {
-      // Create transport voucher
-      createMutation.mutate(formData, {
+      // Create transport voucher - include fuel cost if dotation is provided
+      const createData = { ...formData };
+      if (includeDotation && dotationData.quantiteLitres > 0) {
+        createData.montantCarburant = dotationData.quantiteLitres * (dotationData.prixUnitaire || 0);
+      }
+      createMutation.mutate(createData, {
         onSuccess: () => {
           // If fuel allocation is included, create it after the transport voucher
           if (includeDotation && formData.camionId && dotationData.quantiteLitres > 0) {
@@ -368,7 +374,8 @@ export default function TransportPage() {
     if (!printWindow) return;
 
     // Calcul du total des frais
-    const totalFrais = (Number(bon.fraisRoute) || 0) + (Number(bon.fraisDepannage) || 0) + (Number(bon.fraisAutres) || 0);
+    const montantCarburant = Number(bon.montantCarburant) || 0;
+    const totalFrais = (Number(bon.fraisRoute) || 0) + (Number(bon.fraisDepannage) || 0) + (Number(bon.fraisAutres) || 0) + montantCarburant;
 
     // Calcul du net (montant - frais)
     const montantNet = (Number(bon.montantHt) || 0) - totalFrais;
@@ -496,6 +503,11 @@ export default function TransportPage() {
               <tr>
                 <td>Autres frais${bon.fraisAutresDescription ? ` (${bon.fraisAutresDescription})` : ''}</td>
                 <td class="amount">- ${Number(bon.fraisAutres).toLocaleString('fr-FR')}</td>
+              </tr>` : ''}
+              ${montantCarburant > 0 ? `
+              <tr>
+                <td>Carburant</td>
+                <td class="amount">- ${montantCarburant.toLocaleString('fr-FR')}</td>
               </tr>` : ''}
               ${totalFrais > 0 ? `
               <tr class="total-row">
@@ -992,49 +1004,39 @@ export default function TransportPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Camion</label>
-                    <select
-                      value={formData.camionId || ''}
-                      onChange={(e) => setFormData({ ...formData, camionId: e.target.value ? Number(e.target.value) : undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    >
-                      <option value="">-- Sélectionner --</option>
-                      {camions
-                        ?.filter(c => {
-                          // En édition: afficher tous les camions sauf HORS_SERVICE
-                          if (editingBon) return c.statut !== 'HORS_SERVICE';
-                          // En création: seulement les disponibles
-                          return c.statut === 'DISPONIBLE';
-                        })
-                        .map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.immatriculation}
-                            {c.statut !== 'DISPONIBLE' ? ` (${c.statut})` : ''}
-                          </option>
-                        ))}
-                    </select>
+                    <SearchableSelect
+                      value={formData.camionId}
+                      onChange={(val) => setFormData({ ...formData, camionId: val ? Number(val) : undefined })}
+                      placeholder="Rechercher un camion..."
+                      emptyLabel="-- Sélectionner --"
+                      options={
+                        camions
+                          ?.filter(c => editingBon ? c.statut !== 'HORS_SERVICE' : c.statut === 'DISPONIBLE')
+                          .map(c => ({
+                            value: c.id,
+                            label: c.immatriculation,
+                            sublabel: c.statut !== 'DISPONIBLE' ? c.statut : undefined,
+                          })) || []
+                      }
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Chauffeur</label>
-                    <select
-                      value={formData.chauffeurId || ''}
-                      onChange={(e) => setFormData({ ...formData, chauffeurId: e.target.value ? Number(e.target.value) : undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    >
-                      <option value="">-- Sélectionner --</option>
-                      {chauffeurs
-                        ?.filter(c => {
-                          // En édition: afficher tous les chauffeurs sauf INDISPONIBLE
-                          if (editingBon) return c.statut !== 'INDISPONIBLE';
-                          // En création: seulement les disponibles
-                          return c.statut === 'DISPONIBLE';
-                        })
-                        .map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.prenom} {c.nom}
-                            {c.statut !== 'DISPONIBLE' ? ` (${c.statut})` : ''}
-                          </option>
-                        ))}
-                    </select>
+                    <SearchableSelect
+                      value={formData.chauffeurId}
+                      onChange={(val) => setFormData({ ...formData, chauffeurId: val ? Number(val) : undefined })}
+                      placeholder="Rechercher un chauffeur..."
+                      emptyLabel="-- Sélectionner --"
+                      options={
+                        chauffeurs
+                          ?.filter(c => editingBon ? c.statut !== 'INDISPONIBLE' : c.statut === 'DISPONIBLE')
+                          .map(c => ({
+                            value: c.id,
+                            label: `${c.prenom} ${c.nom}`,
+                            sublabel: c.statut !== 'DISPONIBLE' ? c.statut : undefined,
+                          })) || []
+                      }
+                    />
                   </div>
                 </div>
                 <div>
@@ -1406,7 +1408,7 @@ export default function TransportPage() {
             </div>
 
             {/* Frais de route et dépenses */}
-            {(viewingBon.fraisRoute || viewingBon.fraisDepannage || viewingBon.fraisAutres) && (
+            {(viewingBon.fraisRoute || viewingBon.fraisDepannage || viewingBon.fraisAutres || viewingBon.montantCarburant) && (
               <div className="mt-6 pt-4 border-t">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Frais de route et dépenses</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -1431,6 +1433,12 @@ export default function TransportPage() {
                       )}
                     </div>
                   ) : null}
+                  {viewingBon.montantCarburant ? (
+                    <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+                      <label className="text-sm text-gray-500 dark:text-gray-400">Carburant</label>
+                      <p className="text-green-600 dark:text-green-400 font-medium">{Number(viewingBon.montantCarburant).toLocaleString('fr-FR')} FCFA</p>
+                    </div>
+                  ) : null}
                 </div>
                 {/* Total des frais */}
                 <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
@@ -1440,7 +1448,8 @@ export default function TransportPage() {
                       {(
                         (Number(viewingBon.fraisRoute) || 0) +
                         (Number(viewingBon.fraisDepannage) || 0) +
-                        (Number(viewingBon.fraisAutres) || 0)
+                        (Number(viewingBon.fraisAutres) || 0) +
+                        (Number(viewingBon.montantCarburant) || 0)
                       ).toLocaleString('fr-FR')} FCFA
                     </span>
                   </div>

@@ -80,6 +80,19 @@ export class PneumatiquesController {
     );
   }
 
+  @Post('stock/:id/transferer')
+  transfererPneu(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: { camionId: number; position: string; kmInstallation: number },
+  ): Promise<StockPneumatique> {
+    return this.pneumatiquesService.transfererPneu(
+      id,
+      data.camionId,
+      data.position,
+      data.kmInstallation,
+    );
+  }
+
   @Post('stock/:id/retirer')
   retirerPneu(
     @Param('id', ParseIntPipe) id: number,

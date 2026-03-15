@@ -38,6 +38,7 @@ export default function EntretienPage() {
   const canSeeFinancial = canViewFinancialData('entretien');
 
   // State
+  const [activeView, setActiveView] = useState<'ordres' | 'interventions' | 'kpi'>('ordres');
   const [showModal, setShowModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedMaintenance, setSelectedMaintenance] = useState<Maintenance | null>(null);
@@ -324,8 +325,41 @@ export default function EntretienPage() {
         )}
       </div>
 
+      {/* View Tabs */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 mb-6">
+        <nav className="flex border-b border-gray-200 dark:border-gray-700">
+          <button
+            onClick={() => setActiveView('ordres')}
+            className={`px-6 py-3 text-sm font-medium ${activeView === 'ordres'
+              ? 'text-yellow-600 border-b-2 border-yellow-500'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+            }`}
+          >
+            Ordres de Réparation
+          </button>
+          <button
+            onClick={() => setActiveView('interventions')}
+            className={`px-6 py-3 text-sm font-medium ${activeView === 'interventions'
+              ? 'text-yellow-600 border-b-2 border-yellow-500'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+            }`}
+          >
+            Interventions
+          </button>
+          <button
+            onClick={() => setActiveView('kpi')}
+            className={`px-6 py-3 text-sm font-medium ${activeView === 'kpi'
+              ? 'text-yellow-600 border-b-2 border-yellow-500'
+              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+            }`}
+          >
+            Analyse KPI
+          </button>
+        </nav>
+      </div>
+
       {/* Stats Cards */}
-      {stats && (
+      {stats && activeView !== 'kpi' && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
             <p className="text-sm text-gray-500 dark:text-gray-400">Total</p>
@@ -356,177 +390,467 @@ export default function EntretienPage() {
         </div>
       )}
 
-      {/* Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-700">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recherche</label>
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Numero, titre, immatriculation..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            />
+      {/* === ORDRES DE REPARATION VIEW === */}
+      {activeView === 'ordres' && (
+        <>
+          {/* Filters */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 mb-6 border border-gray-200 dark:border-gray-700">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recherche</label>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Numero, titre, immatriculation..."
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Statut</label>
+                <select
+                  value={filterStatut}
+                  onChange={(e) => setFilterStatut(e.target.value as StatutMaintenance | '')}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                >
+                  <option value="">Tous</option>
+                  {Object.entries(STATUT_MAINTENANCE_LABELS).map(([key, label]) => (
+                    <option key={key} value={key}>{label}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
+                <select
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value as TypeMaintenance | '')}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                >
+                  <option value="">Tous</option>
+                  {Object.entries(TYPE_MAINTENANCE_LABELS).map(([key, label]) => (
+                    <option key={key} value={key}>{label}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Priorite</label>
+                <select
+                  value={filterPriorite}
+                  onChange={(e) => setFilterPriorite(e.target.value as PrioriteMaintenance | '')}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                >
+                  <option value="">Toutes</option>
+                  {Object.entries(PRIORITE_MAINTENANCE_LABELS).map(([key, label]) => (
+                    <option key={key} value={key}>{label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Statut</label>
-            <select
-              value={filterStatut}
-              onChange={(e) => setFilterStatut(e.target.value as StatutMaintenance | '')}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              <option value="">Tous</option>
-              {Object.entries(STATUT_MAINTENANCE_LABELS).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value as TypeMaintenance | '')}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              <option value="">Tous</option>
-              {Object.entries(TYPE_MAINTENANCE_LABELS).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Priorite</label>
-            <select
-              value={filterPriorite}
-              onChange={(e) => setFilterPriorite(e.target.value as PrioriteMaintenance | '')}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            >
-              <option value="">Toutes</option>
-              {Object.entries(PRIORITE_MAINTENANCE_LABELS).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-        {isLoading ? (
-          <div className="p-8 text-center text-gray-500">Chargement...</div>
-        ) : maintenances && maintenances.length > 0 ? (
-          <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Numero</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Camion</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Type</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Titre</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Date prevue</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Priorite</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Statut</th>
-                {canSeeFinancial && (
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Cout</th>
-                )}
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-              {maintenances.map((m) => (
-                <tr key={m.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => handleViewDetail(m)}
-                      className="text-yellow-600 hover:text-yellow-700 font-medium"
-                    >
-                      {m.numero}
-                    </button>
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-white">
-                    {m.camion?.immatriculation || '-'}
-                  </td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
-                    {TYPE_MAINTENANCE_LABELS[m.type]}
-                  </td>
-                  <td className="px-4 py-3 text-gray-900 dark:text-white">{m.titre}</td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
-                    {new Date(m.datePlanifiee).toLocaleDateString('fr-FR')}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPrioriteBadgeClass(m.priorite)}`}>
-                      {PRIORITE_MAINTENANCE_LABELS[m.priorite]}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatutBadgeClass(m.statut)}`}>
-                      {STATUT_MAINTENANCE_LABELS[m.statut]}
-                    </span>
-                  </td>
-                  {canSeeFinancial && (
-                    <td className="px-4 py-3 text-gray-900 dark:text-white">
-                      {formatCurrency(Number(m.coutPieces) + Number(m.coutMainOeuvre) + Number(m.coutExterne))}
-                    </td>
-                  )}
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      {canUpdate && m.statut === 'PLANIFIE' && (
+          {/* Table */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            {isLoading ? (
+              <div className="p-8 text-center text-gray-500">Chargement...</div>
+            ) : maintenances && maintenances.length > 0 ? (
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Numero</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Camion</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Type</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Titre</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Date prevue</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Priorite</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Statut</th>
+                    {canSeeFinancial && (
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Cout</th>
+                    )}
+                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {maintenances.map((m) => (
+                    <tr key={m.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                      <td className="px-4 py-3">
                         <button
-                          onClick={() => updateStatutMutation.mutate({ id: m.id, statut: 'EN_COURS' })}
-                          className="text-orange-600 hover:text-orange-700"
-                          title="Demarrer"
+                          onClick={() => handleViewDetail(m)}
+                          className="text-yellow-600 hover:text-yellow-700 font-medium"
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
+                          {m.numero}
                         </button>
+                      </td>
+                      <td className="px-4 py-3 text-gray-900 dark:text-white">
+                        {m.camion?.immatriculation || '-'}
+                      </td>
+                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
+                        {TYPE_MAINTENANCE_LABELS[m.type]}
+                      </td>
+                      <td className="px-4 py-3 text-gray-900 dark:text-white">{m.titre}</td>
+                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">
+                        {new Date(m.datePlanifiee).toLocaleDateString('fr-FR')}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPrioriteBadgeClass(m.priorite)}`}>
+                          {PRIORITE_MAINTENANCE_LABELS[m.priorite]}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatutBadgeClass(m.statut)}`}>
+                          {STATUT_MAINTENANCE_LABELS[m.statut]}
+                        </span>
+                      </td>
+                      {canSeeFinancial && (
+                        <td className="px-4 py-3 text-gray-900 dark:text-white">
+                          {formatCurrency(Number(m.coutPieces) + Number(m.coutMainOeuvre) + Number(m.coutExterne))}
+                        </td>
                       )}
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {canUpdate && m.statut === 'PLANIFIE' && (
+                            <button
+                              onClick={() => updateStatutMutation.mutate({ id: m.id, statut: 'EN_COURS' })}
+                              className="text-orange-600 hover:text-orange-700"
+                              title="Demarrer"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </button>
+                          )}
+                          {canUpdate && m.statut === 'EN_COURS' && (
+                            <button
+                              onClick={() => updateStatutMutation.mutate({ id: m.id, statut: 'TERMINE' })}
+                              className="text-green-600 hover:text-green-700"
+                              title="Terminer"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </button>
+                          )}
+                          {canUpdate && (
+                            <button
+                              onClick={() => handleEdit(m)}
+                              className="text-blue-600 hover:text-blue-700"
+                              title="Modifier"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                              </svg>
+                            </button>
+                          )}
+                          {canDelete && (
+                            <button
+                              onClick={() => handleDelete(m.id)}
+                              className="text-red-600 hover:text-red-700"
+                              title="Supprimer"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                Aucune maintenance trouvee
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* === INTERVENTIONS VIEW === */}
+      {activeView === 'interventions' && (
+        <div className="space-y-4">
+          {isLoading ? (
+            <div className="p-8 text-center text-gray-500">Chargement...</div>
+          ) : (() => {
+            const interventions = (maintenances || []).filter(m => m.statut === 'EN_COURS' || m.statut === 'TERMINE');
+            return interventions.length > 0 ? (
+              <div className="space-y-4">
+                {interventions.map((m) => {
+                  const coutTotal = Number(m.coutPieces) + Number(m.coutMainOeuvre) + Number(m.coutExterne);
+                  const dureeJours = m.dateDebut && m.dateFin
+                    ? Math.ceil((new Date(m.dateFin).getTime() - new Date(m.dateDebut).getTime()) / (1000 * 60 * 60 * 24))
+                    : m.dateDebut
+                    ? Math.ceil((new Date().getTime() - new Date(m.dateDebut).getTime()) / (1000 * 60 * 60 * 24))
+                    : null;
+                  return (
+                    <div key={m.id} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={() => handleViewDetail(m)}
+                              className="text-lg font-semibold text-yellow-600 hover:text-yellow-700"
+                            >
+                              {m.numero}
+                            </button>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatutBadgeClass(m.statut)}`}>
+                              {STATUT_MAINTENANCE_LABELS[m.statut]}
+                            </span>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getPrioriteBadgeClass(m.priorite)}`}>
+                              {PRIORITE_MAINTENANCE_LABELS[m.priorite]}
+                            </span>
+                          </div>
+                          <p className="text-gray-900 dark:text-white font-medium mt-1">{m.titre}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {m.camion?.immatriculation} - {TYPE_MAINTENANCE_LABELS[m.type]}
+                          </p>
+                        </div>
+                        <div className="text-right text-sm text-gray-500 dark:text-gray-400">
+                          {m.dateDebut && (
+                            <p>Debut: {new Date(m.dateDebut).toLocaleDateString('fr-FR')}</p>
+                          )}
+                          {m.dateFin && (
+                            <p>Fin: {new Date(m.dateFin).toLocaleDateString('fr-FR')}</p>
+                          )}
+                          {dureeJours !== null && (
+                            <p className="font-medium text-gray-700 dark:text-gray-300">
+                              Duree: {dureeJours} jour{dureeJours > 1 ? 's' : ''}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Travaux effectues */}
+                      {m.travauxEffectues && (
+                        <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                          <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">Travaux effectues</p>
+                          <p className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{m.travauxEffectues}</p>
+                        </div>
+                      )}
+
+                      {/* Pieces utilisees */}
+                      {m.piecesUtilisees && m.piecesUtilisees.length > 0 && (
+                        <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                          <p className="text-xs font-medium text-blue-700 dark:text-blue-300 mb-2">
+                            Pieces changees ({m.piecesUtilisees.length})
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {m.piecesUtilisees.map((piece, idx) => (
+                              <span key={idx} className="inline-flex items-center px-2 py-1 bg-white dark:bg-gray-800 rounded text-xs text-gray-700 dark:text-gray-300 border border-blue-200 dark:border-blue-800">
+                                {piece.designation} x{piece.quantite}
+                                {canSeeFinancial && piece.prixUnitaire ? ` (${(piece.quantite * piece.prixUnitaire).toLocaleString()} FCFA)` : ''}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Couts */}
+                      {canSeeFinancial && coutTotal > 0 && (
+                        <div className="mt-3 flex items-center gap-4 text-sm">
+                          <span className="text-gray-500 dark:text-gray-400">Pieces: {formatCurrency(Number(m.coutPieces))}</span>
+                          <span className="text-gray-500 dark:text-gray-400">MO: {formatCurrency(Number(m.coutMainOeuvre))}</span>
+                          <span className="text-gray-500 dark:text-gray-400">Ext: {formatCurrency(Number(m.coutExterne))}</span>
+                          <span className="font-semibold text-gray-900 dark:text-white">Total: {formatCurrency(coutTotal)}</span>
+                        </div>
+                      )}
+
+                      {/* Actions rapides */}
                       {canUpdate && m.statut === 'EN_COURS' && (
-                        <button
-                          onClick={() => updateStatutMutation.mutate({ id: m.id, statut: 'TERMINE' })}
-                          className="text-green-600 hover:text-green-700"
-                          title="Terminer"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                        </button>
-                      )}
-                      {canUpdate && (
-                        <button
-                          onClick={() => handleEdit(m)}
-                          className="text-blue-600 hover:text-blue-700"
-                          title="Modifier"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </button>
-                      )}
-                      {canDelete && (
-                        <button
-                          onClick={() => handleDelete(m.id)}
-                          className="text-red-600 hover:text-red-700"
-                          title="Supprimer"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
+                        <div className="mt-3 flex gap-2">
+                          <button
+                            onClick={() => updateStatutMutation.mutate({ id: m.id, statut: 'TERMINE' })}
+                            className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+                          >
+                            Terminer
+                          </button>
+                          <button
+                            onClick={() => handleEdit(m)}
+                            className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                          >
+                            Modifier
+                          </button>
+                        </div>
                       )}
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-            Aucune maintenance trouvee
-          </div>
-        )}
-      </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center text-gray-500 dark:text-gray-400">
+                Aucune intervention en cours ou terminee
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* === KPI ANALYSIS VIEW === */}
+      {activeView === 'kpi' && (
+        <div className="space-y-6">
+          {/* KPI Summary Cards */}
+          {stats && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+                <p className="text-sm text-gray-500 dark:text-gray-400">Total maintenances</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-white">{stats.total}</p>
+              </div>
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+                <p className="text-sm text-gray-500 dark:text-gray-400">Taux de completion</p>
+                <p className="text-3xl font-bold text-green-600">
+                  {stats.total > 0 ? Math.round((stats.termine / stats.total) * 100) : 0}%
+                </p>
+              </div>
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+                <p className="text-sm text-gray-500 dark:text-gray-400">En retard</p>
+                <p className="text-3xl font-bold text-red-600">{stats.enRetard}</p>
+              </div>
+              {canSeeFinancial && (
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-5 border border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Cout total ce mois</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(stats.coutTotalMois)}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Repartition par type */}
+          {maintenances && maintenances.length > 0 && (
+            <>
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Repartition par type</h3>
+                <div className="space-y-3">
+                  {Object.entries(TYPE_MAINTENANCE_LABELS).map(([type, label]) => {
+                    const count = maintenances.filter(m => m.type === type).length;
+                    const pct = maintenances.length > 0 ? Math.round((count / maintenances.length) * 100) : 0;
+                    const cost = maintenances.filter(m => m.type === type).reduce((sum, m) => sum + Number(m.coutPieces) + Number(m.coutMainOeuvre) + Number(m.coutExterne), 0);
+                    return (
+                      <div key={type}>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">
+                            {count} ({pct}%)
+                            {canSeeFinancial && cost > 0 && ` - ${formatCurrency(cost)}`}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                          <div
+                            className="bg-yellow-500 h-2 rounded-full"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Cout par camion */}
+              {canSeeFinancial && (
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Cout par camion</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Camion</th>
+                          <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Nb interventions</th>
+                          <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Cout pieces</th>
+                          <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Cout MO</th>
+                          <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Cout externe</th>
+                          <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                        {(() => {
+                          const camionMap = new Map<number, { immat: string; count: number; pieces: number; mo: number; ext: number }>();
+                          maintenances.forEach(m => {
+                            if (!m.camionId) return;
+                            const existing = camionMap.get(m.camionId) || { immat: m.camion?.immatriculation || '-', count: 0, pieces: 0, mo: 0, ext: 0 };
+                            existing.count++;
+                            existing.pieces += Number(m.coutPieces);
+                            existing.mo += Number(m.coutMainOeuvre);
+                            existing.ext += Number(m.coutExterne);
+                            camionMap.set(m.camionId, existing);
+                          });
+                          return Array.from(camionMap.entries())
+                            .sort((a, b) => (b[1].pieces + b[1].mo + b[1].ext) - (a[1].pieces + a[1].mo + a[1].ext))
+                            .map(([camionId, data]) => (
+                              <tr key={camionId} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                                <td className="px-4 py-2 font-medium text-gray-900 dark:text-white">{data.immat}</td>
+                                <td className="px-4 py-2 text-center text-gray-600 dark:text-gray-400">{data.count}</td>
+                                <td className="px-4 py-2 text-right text-gray-600 dark:text-gray-400">{formatCurrency(data.pieces)}</td>
+                                <td className="px-4 py-2 text-right text-gray-600 dark:text-gray-400">{formatCurrency(data.mo)}</td>
+                                <td className="px-4 py-2 text-right text-gray-600 dark:text-gray-400">{formatCurrency(data.ext)}</td>
+                                <td className="px-4 py-2 text-right font-semibold text-gray-900 dark:text-white">
+                                  {formatCurrency(data.pieces + data.mo + data.ext)}
+                                </td>
+                              </tr>
+                            ));
+                        })()}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* MTTR - Temps moyen de reparation */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Temps moyen de reparation (MTTR)</h3>
+                {(() => {
+                  const terminees = maintenances.filter(m => m.statut === 'TERMINE' && m.dateDebut && m.dateFin);
+                  if (terminees.length === 0) {
+                    return <p className="text-gray-500 dark:text-gray-400">Aucune maintenance terminee avec dates debut/fin</p>;
+                  }
+                  const durees = terminees.map(m => {
+                    const debut = new Date(m.dateDebut!).getTime();
+                    const fin = new Date(m.dateFin!).getTime();
+                    return Math.max(1, Math.ceil((fin - debut) / (1000 * 60 * 60 * 24)));
+                  });
+                  const mttr = Math.round(durees.reduce((a, b) => a + b, 0) / durees.length * 10) / 10;
+                  const min = Math.min(...durees);
+                  const max = Math.max(...durees);
+                  return (
+                    <div className="grid grid-cols-3 gap-6">
+                      <div className="text-center">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Minimum</p>
+                        <p className="text-2xl font-bold text-blue-600">{min} jour{min > 1 ? 's' : ''}</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Moyenne (MTTR)</p>
+                        <p className="text-2xl font-bold text-yellow-600">{mttr} jours</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Maximum</p>
+                        <p className="text-2xl font-bold text-red-600">{max} jour{max > 1 ? 's' : ''}</p>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Frequence par statut */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Repartition par statut</h3>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  {Object.entries(STATUT_MAINTENANCE_LABELS).map(([statut, label]) => {
+                    const count = maintenances.filter(m => m.statut === statut).length;
+                    return (
+                      <div key={statut} className="text-center p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium mb-2 ${getStatutBadgeClass(statut as StatutMaintenance)}`}>
+                          {label}
+                        </span>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{count}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Create/Edit Modal */}
       {
