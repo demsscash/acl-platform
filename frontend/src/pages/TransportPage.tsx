@@ -7,7 +7,7 @@ import chauffeursService from '../services/chauffeurs.service';
 import carburantService from '../services/carburant.service';
 import { exportToCSV, printTable } from '../utils/export';
 import { useToast } from '../components/ui/Toast';
-import { SkeletonTable, Breadcrumb, Pagination } from '../components/ui';
+import { SkeletonTable, Breadcrumb, Pagination, SearchableSelect } from '../components/ui';
 import { useEscapeKey } from '../hooks/useKeyboardShortcuts';
 import { useAuthStore } from '../stores/auth.store';
 
@@ -1004,49 +1004,39 @@ export default function TransportPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Camion</label>
-                    <select
-                      value={formData.camionId || ''}
-                      onChange={(e) => setFormData({ ...formData, camionId: e.target.value ? Number(e.target.value) : undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    >
-                      <option value="">-- Sélectionner --</option>
-                      {camions
-                        ?.filter(c => {
-                          // En édition: afficher tous les camions sauf HORS_SERVICE
-                          if (editingBon) return c.statut !== 'HORS_SERVICE';
-                          // En création: seulement les disponibles
-                          return c.statut === 'DISPONIBLE';
-                        })
-                        .map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.immatriculation}
-                            {c.statut !== 'DISPONIBLE' ? ` (${c.statut})` : ''}
-                          </option>
-                        ))}
-                    </select>
+                    <SearchableSelect
+                      value={formData.camionId}
+                      onChange={(val) => setFormData({ ...formData, camionId: val ? Number(val) : undefined })}
+                      placeholder="Rechercher un camion..."
+                      emptyLabel="-- Sélectionner --"
+                      options={
+                        camions
+                          ?.filter(c => editingBon ? c.statut !== 'HORS_SERVICE' : c.statut === 'DISPONIBLE')
+                          .map(c => ({
+                            value: c.id,
+                            label: c.immatriculation,
+                            sublabel: c.statut !== 'DISPONIBLE' ? c.statut : undefined,
+                          })) || []
+                      }
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Chauffeur</label>
-                    <select
-                      value={formData.chauffeurId || ''}
-                      onChange={(e) => setFormData({ ...formData, chauffeurId: e.target.value ? Number(e.target.value) : undefined })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    >
-                      <option value="">-- Sélectionner --</option>
-                      {chauffeurs
-                        ?.filter(c => {
-                          // En édition: afficher tous les chauffeurs sauf INDISPONIBLE
-                          if (editingBon) return c.statut !== 'INDISPONIBLE';
-                          // En création: seulement les disponibles
-                          return c.statut === 'DISPONIBLE';
-                        })
-                        .map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.prenom} {c.nom}
-                            {c.statut !== 'DISPONIBLE' ? ` (${c.statut})` : ''}
-                          </option>
-                        ))}
-                    </select>
+                    <SearchableSelect
+                      value={formData.chauffeurId}
+                      onChange={(val) => setFormData({ ...formData, chauffeurId: val ? Number(val) : undefined })}
+                      placeholder="Rechercher un chauffeur..."
+                      emptyLabel="-- Sélectionner --"
+                      options={
+                        chauffeurs
+                          ?.filter(c => editingBon ? c.statut !== 'INDISPONIBLE' : c.statut === 'DISPONIBLE')
+                          .map(c => ({
+                            value: c.id,
+                            label: `${c.prenom} ${c.nom}`,
+                            sublabel: c.statut !== 'DISPONIBLE' ? c.statut : undefined,
+                          })) || []
+                      }
+                    />
                   </div>
                 </div>
                 <div>

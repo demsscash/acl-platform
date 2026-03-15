@@ -14,6 +14,7 @@ import type {
 } from '../services/pieces.service';
 import camionsService from '../services/camions.service';
 import { exportToCSV, printTable } from '../utils/export';
+import { SearchableSelect } from '../components/ui';
 
 interface CreatePieceDto {
   reference: string;
@@ -1247,19 +1248,19 @@ export default function PiecesPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Camion *</label>
-                    <select
-                      value={sortieForm.camionId}
-                      onChange={(e) => setSortieForm({ ...sortieForm, camionId: Number(e.target.value) })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                      required
-                    >
-                      <option value={0}>-- Sélectionner --</option>
-                      {camions?.map((camion) => (
-                        <option key={camion.id} value={camion.id}>
-                          {camion.immatriculation} - {camion.typeCamion}
-                        </option>
-                      ))}
-                    </select>
+                    <SearchableSelect
+                      value={sortieForm.camionId || undefined}
+                      onChange={(val) => setSortieForm({ ...sortieForm, camionId: val ? Number(val) : 0 })}
+                      placeholder="Rechercher un camion..."
+                      emptyLabel="-- Sélectionner --"
+                      allowEmpty={false}
+                      options={
+                        camions?.map(camion => ({
+                          value: camion.id,
+                          label: `${camion.immatriculation} - ${camion.typeCamion}`,
+                        })) || []
+                      }
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kilométrage</label>
@@ -1312,18 +1313,22 @@ export default function PiecesPage() {
                   <div className="space-y-2">
                     {sortieForm.lignes.map((ligne, index) => (
                       <div key={index} className="flex gap-2 items-center">
-                        <select
-                          value={ligne.pieceId}
-                          onChange={(e) => updateLigne(index, 'pieceId', Number(e.target.value))}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        >
-                          <option value={0}>-- Sélectionner une pièce --</option>
-                          {pieces?.map((piece) => (
-                            <option key={piece.id} value={piece.id}>
-                              {piece.reference} - {piece.designation} (stock: {getStockForPiece(piece.id)})
-                            </option>
-                          ))}
-                        </select>
+                        <div className="flex-1">
+                          <SearchableSelect
+                            value={ligne.pieceId || undefined}
+                            onChange={(val) => updateLigne(index, 'pieceId', val ? Number(val) : 0)}
+                            placeholder="Rechercher une pièce..."
+                            emptyLabel="-- Sélectionner une pièce --"
+                            allowEmpty={false}
+                            options={
+                              pieces?.map(piece => ({
+                                value: piece.id,
+                                label: `${piece.reference} - ${piece.designation}`,
+                                sublabel: `stock: ${getStockForPiece(piece.id)}`,
+                              })) || []
+                            }
+                          />
+                        </div>
                         <input
                           type="number"
                           value={ligne.quantite}
@@ -1482,19 +1487,20 @@ export default function PiecesPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fournisseur</label>
-                    <select
-                      value={entreeForm.fournisseurId}
-                      onChange={(e) => setEntreeForm({ ...entreeForm, fournisseurId: Number(e.target.value) })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    >
-                      <option value={0}>-- Sélectionner --</option>
-                      {fournisseurs?.map((f) => (
-                        <option key={f.id} value={f.id}>
-                          {f.raisonSociale}
-                        </option>
-                      ))}
-                      <option value={-1}>Autres</option>
-                    </select>
+                    <SearchableSelect
+                      value={entreeForm.fournisseurId || undefined}
+                      onChange={(val) => setEntreeForm({ ...entreeForm, fournisseurId: val ? Number(val) : 0 })}
+                      placeholder="Rechercher un fournisseur..."
+                      emptyLabel="-- Sélectionner --"
+                      options={[
+                        ...(fournisseurs?.map(f => ({
+                          value: f.id,
+                          label: f.raisonSociale,
+                          sublabel: f.code,
+                        })) || []),
+                        { value: -1, label: 'Autres' },
+                      ]}
+                    />
                   </div>
                 </div>
 
@@ -1547,18 +1553,21 @@ export default function PiecesPage() {
                   <div className="space-y-2">
                     {entreeForm.lignes.map((ligne, index) => (
                       <div key={index} className="flex gap-2 items-center">
-                        <select
-                          value={ligne.pieceId}
-                          onChange={(e) => updateLigneEntree(index, 'pieceId', Number(e.target.value))}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        >
-                          <option value={0}>-- Sélectionner une pièce --</option>
-                          {pieces?.map((piece) => (
-                            <option key={piece.id} value={piece.id}>
-                              {piece.reference} - {piece.designation}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="flex-1">
+                          <SearchableSelect
+                            value={ligne.pieceId || undefined}
+                            onChange={(val) => updateLigneEntree(index, 'pieceId', val ? Number(val) : 0)}
+                            placeholder="Rechercher une pièce..."
+                            emptyLabel="-- Sélectionner une pièce --"
+                            allowEmpty={false}
+                            options={
+                              pieces?.map(piece => ({
+                                value: piece.id,
+                                label: `${piece.reference} - ${piece.designation}`,
+                              })) || []
+                            }
+                          />
+                        </div>
                         <input
                           type="number"
                           value={ligne.quantite}
