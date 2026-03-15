@@ -119,6 +119,12 @@ export default function CarburantPage() {
   const [searchDotation, setSearchDotation] = useState('');
   const [searchAppro, setSearchAppro] = useState('');
 
+  // Period filter states
+  const [dotationDateDebut, setDotationDateDebut] = useState('');
+  const [dotationDateFin, setDotationDateFin] = useState('');
+  const [approDateDebut, setApproDateDebut] = useState('');
+  const [approDateFin, setApproDateFin] = useState('');
+
   // Confirmation modal state
   const [confirmModal, setConfirmModal] = useState<{
     show: boolean;
@@ -244,6 +250,10 @@ export default function CarburantPage() {
 
   // Filtered dotations
   const filteredDotations = dotations?.filter(d => {
+    // Date period filter
+    if (dotationDateDebut && d.dateDotation < dotationDateDebut) return false;
+    if (dotationDateFin && d.dateDotation > dotationDateFin + 'T23:59:59') return false;
+
     if (!searchDotation) return true;
     const search = searchDotation.toLowerCase();
     return (
@@ -257,8 +267,16 @@ export default function CarburantPage() {
     );
   });
 
+  // Dotation totals for period
+  const dotationTotalLitres = filteredDotations?.reduce((sum, d) => sum + Number(d.quantiteLitres), 0) || 0;
+  const dotationTotalCout = filteredDotations?.reduce((sum, d) => sum + (Number(d.coutTotal) || 0), 0) || 0;
+
   // Filtered approvisionnements
   const filteredAppros = approvisionnements?.filter(a => {
+    // Date period filter
+    if (approDateDebut && a.dateApprovisionnement < approDateDebut) return false;
+    if (approDateFin && a.dateApprovisionnement > approDateFin + 'T23:59:59') return false;
+
     if (!searchAppro) return true;
     const search = searchAppro.toLowerCase();
     return (
@@ -269,6 +287,10 @@ export default function CarburantPage() {
       a.numeroBonLivraison?.toLowerCase().includes(search)
     );
   });
+
+  // Appro totals for period
+  const approTotalLitres = filteredAppros?.reduce((sum, a) => sum + Number(a.quantiteLitres), 0) || 0;
+  const approTotalCout = filteredAppros?.reduce((sum, a) => sum + (Number(a.coutTotal) || 0), 0) || 0;
 
   return (
     <div>
@@ -368,6 +390,26 @@ export default function CarburantPage() {
           </nav>
         </div>
 
+        {/* Permanent low stock alerts */}
+        {cuves && cuves.filter(c => c.niveauActuelLitres <= c.seuilAlerteBas).length > 0 && (
+          <div className="mx-4 mt-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-1">
+              <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <span className="font-semibold text-red-800 dark:text-red-200 text-sm">Alertes carburant</span>
+            </div>
+            <div className="flex flex-wrap gap-3 ml-7">
+              {cuves.filter(c => c.niveauActuelLitres <= c.seuilAlerteBas).map(c => (
+                <span key={c.id} className="text-sm text-red-700 dark:text-red-300">
+                  <strong>{c.nom}</strong>: {c.niveauActuelLitres.toLocaleString()} L / {c.capaciteLitres.toLocaleString()} L
+                  ({Math.round((c.niveauActuelLitres / c.capaciteLitres) * 100)}%)
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Cuves Tab */}
         {activeTab === 'cuves' && (
           <div className="p-6">
@@ -412,6 +454,29 @@ export default function CarburantPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
+                  </button>
+                )}
+              </div>
+              {/* Period filter */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  value={dotationDateDebut}
+                  onChange={(e) => setDotationDateDebut(e.target.value)}
+                  className="px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  title="Date début"
+                />
+                <span className="text-gray-400 text-sm">à</span>
+                <input
+                  type="date"
+                  value={dotationDateFin}
+                  onChange={(e) => setDotationDateFin(e.target.value)}
+                  className="px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  title="Date fin"
+                />
+                {(dotationDateDebut || dotationDateFin) && (
+                  <button onClick={() => { setDotationDateDebut(''); setDotationDateFin(''); }} className="text-gray-400 hover:text-gray-600 text-xs">
+                    Effacer
                   </button>
                 )}
               </div>
@@ -480,6 +545,20 @@ export default function CarburantPage() {
               </button>
               </div>
             </div>
+            {/* Period summary */}
+            {(dotationDateDebut || dotationDateFin) && filteredDotations && filteredDotations.length > 0 && (
+              <div className="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/20 border-b flex items-center gap-6 text-sm">
+                <span className="text-gray-600 dark:text-gray-400">
+                  <strong>{filteredDotations.length}</strong> enlèvement(s)
+                </span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Total: <strong>{dotationTotalLitres.toLocaleString('fr-FR')} L</strong>
+                </span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Coût: <strong>{dotationTotalCout.toLocaleString('fr-FR')} FCFA</strong>
+                </span>
+              </div>
+            )}
             <div className="overflow-x-auto">
             {loadingDotations ? (
               <div className="flex justify-center py-8">
@@ -576,6 +655,29 @@ export default function CarburantPage() {
                   </button>
                 )}
               </div>
+              {/* Period filter */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  value={approDateDebut}
+                  onChange={(e) => setApproDateDebut(e.target.value)}
+                  className="px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  title="Date début"
+                />
+                <span className="text-gray-400 text-sm">à</span>
+                <input
+                  type="date"
+                  value={approDateFin}
+                  onChange={(e) => setApproDateFin(e.target.value)}
+                  className="px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  title="Date fin"
+                />
+                {(approDateDebut || approDateFin) && (
+                  <button onClick={() => { setApproDateDebut(''); setApproDateFin(''); }} className="text-gray-400 hover:text-gray-600 text-xs">
+                    Effacer
+                  </button>
+                )}
+              </div>
               {/* Export buttons */}
               <div className="flex gap-2">
               <button
@@ -640,6 +742,20 @@ export default function CarburantPage() {
               </button>
               </div>
             </div>
+            {/* Period summary */}
+            {(approDateDebut || approDateFin) && filteredAppros && filteredAppros.length > 0 && (
+              <div className="px-4 py-2 bg-green-50 dark:bg-green-900/20 border-b flex items-center gap-6 text-sm">
+                <span className="text-gray-600 dark:text-gray-400">
+                  <strong>{filteredAppros.length}</strong> approvisionnement(s)
+                </span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Total: <strong>{approTotalLitres.toLocaleString('fr-FR')} L</strong>
+                </span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Coût: <strong>{approTotalCout.toLocaleString('fr-FR')} FCFA</strong>
+                </span>
+              </div>
+            )}
             <div className="overflow-x-auto">
             {loadingAppros ? (
               <div className="flex justify-center py-8">
