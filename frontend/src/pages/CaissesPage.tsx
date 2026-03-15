@@ -162,6 +162,17 @@ export default function CaissesPage() {
     onError: (error: any) => toast.error(error?.response?.data?.message || 'Erreur lors de l\'enregistrement'),
   });
 
+  const deleteMouvementMutation = useMutation({
+    mutationFn: (mouvementId: number) => caissesService.deleteMouvement(mouvementId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['caisses'] });
+      queryClient.invalidateQueries({ queryKey: ['caisses-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['caisses-mouvements'] });
+      toast.success('Mouvement supprimé');
+    },
+    onError: (error: any) => toast.error(error?.response?.data?.message || 'Erreur lors de la suppression'),
+  });
+
   const virementMutation = useMutation({
     mutationFn: caissesService.virement,
     onSuccess: () => {
@@ -422,6 +433,9 @@ export default function CaissesPage() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Référence</th>
                 <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Montant</th>
                 <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Preuve</th>
+                {selectedCaisse?.type === 'CENTRALE' && (
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -468,11 +482,30 @@ export default function CaissesPage() {
                       <span className="text-gray-300 dark:text-gray-600">-</span>
                     )}
                   </td>
+                  {selectedCaisse?.type === 'CENTRALE' && (
+                    <td className="px-4 py-3 text-center">
+                      {m.type !== 'VIREMENT_INTERNE' && (
+                        <button
+                          onClick={() => {
+                            if (confirm(`Supprimer ce mouvement de ${Number(m.montant).toLocaleString('fr-FR')} F ?`)) {
+                              deleteMouvementMutation.mutate(m.id);
+                            }
+                          }}
+                          className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                          title="Supprimer"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
               {(!mouvements || mouvements.length === 0) && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                  <td colSpan={selectedCaisse?.type === 'CENTRALE' ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                     Aucun mouvement enregistré
                   </td>
                 </tr>
@@ -782,7 +815,7 @@ export default function CaissesPage() {
                     type="number"
                     value={virementForm.montant}
                     onChange={(e) => setVirementForm({ ...virementForm, montant: Number(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-lg font-semibold"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                     required
                     min="1"
                     max={Number(caisseCentrale.soldeActuel)}

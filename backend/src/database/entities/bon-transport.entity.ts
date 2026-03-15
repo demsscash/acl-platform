@@ -113,6 +113,9 @@ export class BonTransport {
   @Column({ name: 'frais_autres_description', type: 'text', nullable: true })
   fraisAutresDescription: string;
 
+  @Column({ name: 'montant_carburant', type: 'decimal', precision: 12, scale: 2, default: 0 })
+  montantCarburant: number;
+
   @Column({
     type: 'enum',
     enum: StatutBon,

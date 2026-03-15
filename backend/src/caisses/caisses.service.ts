@@ -218,6 +218,70 @@ export class CaissesService {
     };
   }
 
+  async updateMouvement(mouvementId: number, dto: Partial<CreateMouvementDto>, userId: number): Promise<MouvementCaisse> {
+    const mouvement = await this.mouvementRepository.findOne({
+      where: { id: mouvementId },
+      relations: ['caisse'],
+    });
+    if (!mouvement) {
+      throw new NotFoundException(`Mouvement #${mouvementId} non trouvé`);
+    }
+
+    // Only allow editing non-virement mouvements
+    if (mouvement.type === TypeMouvement.VIREMENT_INTERNE) {
+      throw new BadRequestException('Les virements internes ne peuvent pas être modifiés');
+    }
+
+    // Update allowed fields (not montant/type to avoid balance issues - use delete+recreate)
+    if (dto.nature !== undefined) mouvement.nature = dto.nature;
+    if (dto.beneficiaire !== undefined) mouvement.beneficiaire = dto.beneficiaire;
+    if (dto.modePaiement !== undefined) mouvement.modePaiement = dto.modePaiement;
+    if (dto.numeroReference !== undefined) mouvement.numeroReference = dto.numeroReference;
+    if (dto.date !== undefined) mouvement.date = new Date(dto.date);
+    if (dto.notes !== undefined) mouvement.notes = dto.notes;
+    if (dto.referenceExterne !== undefined) mouvement.referenceExterne = dto.referenceExterne;
+    mouvement.updatedBy = userId;
+
+    return this.mouvementRepository.save(mouvement);
+  }
+
+  async deleteMouvement(mouvementId: number): Promise<void> {
+    const mouvement = await this.mouvementRepository.findOne({
+      where: { id: mouvementId },
+      relations: ['caisse'],
+    });
+    if (!mouvement) {
+      throw new NotFoundException(`Mouvement #${mouvementId} non trouvé`);
+    }
+
+    if (mouvement.type === TypeMouvement.VIREMENT_INTERNE) {
+      throw new BadRequestException('Les virements internes ne peuvent pas être supprimés');
+    }
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Reverse the balance effect
+      const caisse = mouvement.caisse;
+      if (mouvement.type === TypeMouvement.ENTREE) {
+        caisse.soldeActuel = Number(caisse.soldeActuel) - Number(mouvement.montant);
+      } else if (mouvement.type === TypeMouvement.SORTIE) {
+        caisse.soldeActuel = Number(caisse.soldeActuel) + Number(mouvement.montant);
+      }
+      await queryRunner.manager.save(caisse);
+      await queryRunner.manager.remove(mouvement);
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   // Recalculer le solde d'une caisse à partir des mouvements
   async recalculerSolde(caisseId: number): Promise<Caisse> {
     const caisse = await this.findOne(caisseId);

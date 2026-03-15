@@ -33,6 +33,7 @@ interface BonTransport {
   fraisDepannage?: number;
   fraisAutres?: number;
   fraisAutresDescription?: string;
+  montantCarburant?: number;
   statut: 'BROUILLON' | 'EN_COURS' | 'LIVRE' | 'TERMINE' | 'ANNULE' | 'FACTURE';
   notes?: string;
 }
@@ -54,6 +55,7 @@ interface CreateBonDto {
   fraisDepannage?: number;
   fraisAutres?: number;
   fraisAutresDescription?: string;
+  montantCarburant?: number;
   notes?: string;
 }
 
@@ -327,8 +329,12 @@ export default function TransportPage() {
         },
       });
     } else {
-      // Create transport voucher
-      createMutation.mutate(formData, {
+      // Create transport voucher - include fuel cost if dotation is provided
+      const createData = { ...formData };
+      if (includeDotation && dotationData.quantiteLitres > 0) {
+        createData.montantCarburant = dotationData.quantiteLitres * (dotationData.prixUnitaire || 0);
+      }
+      createMutation.mutate(createData, {
         onSuccess: () => {
           // If fuel allocation is included, create it after the transport voucher
           if (includeDotation && formData.camionId && dotationData.quantiteLitres > 0) {
@@ -368,7 +374,8 @@ export default function TransportPage() {
     if (!printWindow) return;
 
     // Calcul du total des frais
-    const totalFrais = (Number(bon.fraisRoute) || 0) + (Number(bon.fraisDepannage) || 0) + (Number(bon.fraisAutres) || 0);
+    const montantCarburant = Number(bon.montantCarburant) || 0;
+    const totalFrais = (Number(bon.fraisRoute) || 0) + (Number(bon.fraisDepannage) || 0) + (Number(bon.fraisAutres) || 0) + montantCarburant;
 
     // Calcul du net (montant - frais)
     const montantNet = (Number(bon.montantHt) || 0) - totalFrais;
@@ -496,6 +503,11 @@ export default function TransportPage() {
               <tr>
                 <td>Autres frais${bon.fraisAutresDescription ? ` (${bon.fraisAutresDescription})` : ''}</td>
                 <td class="amount">- ${Number(bon.fraisAutres).toLocaleString('fr-FR')}</td>
+              </tr>` : ''}
+              ${montantCarburant > 0 ? `
+              <tr>
+                <td>Carburant</td>
+                <td class="amount">- ${montantCarburant.toLocaleString('fr-FR')}</td>
               </tr>` : ''}
               ${totalFrais > 0 ? `
               <tr class="total-row">
@@ -1406,7 +1418,7 @@ export default function TransportPage() {
             </div>
 
             {/* Frais de route et dépenses */}
-            {(viewingBon.fraisRoute || viewingBon.fraisDepannage || viewingBon.fraisAutres) && (
+            {(viewingBon.fraisRoute || viewingBon.fraisDepannage || viewingBon.fraisAutres || viewingBon.montantCarburant) && (
               <div className="mt-6 pt-4 border-t">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Frais de route et dépenses</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -1431,6 +1443,12 @@ export default function TransportPage() {
                       )}
                     </div>
                   ) : null}
+                  {viewingBon.montantCarburant ? (
+                    <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+                      <label className="text-sm text-gray-500 dark:text-gray-400">Carburant</label>
+                      <p className="text-green-600 dark:text-green-400 font-medium">{Number(viewingBon.montantCarburant).toLocaleString('fr-FR')} FCFA</p>
+                    </div>
+                  ) : null}
                 </div>
                 {/* Total des frais */}
                 <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
@@ -1440,7 +1458,8 @@ export default function TransportPage() {
                       {(
                         (Number(viewingBon.fraisRoute) || 0) +
                         (Number(viewingBon.fraisDepannage) || 0) +
-                        (Number(viewingBon.fraisAutres) || 0)
+                        (Number(viewingBon.fraisAutres) || 0) +
+                        (Number(viewingBon.montantCarburant) || 0)
                       ).toLocaleString('fr-FR')} FCFA
                     </span>
                   </div>
