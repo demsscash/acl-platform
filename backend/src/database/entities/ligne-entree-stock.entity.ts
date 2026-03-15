@@ -42,6 +42,9 @@ export class LigneEntreeStock {
   @Column({ type: 'varchar', length: 50, nullable: true })
   emplacement: string;
 
+  @Column({ type: 'varchar', length: 20, default: 'NEUVE' })
+  etat: string; // NEUVE | OCCASION
+
   @Column({ type: 'text', nullable: true })
   notes: string;
 }

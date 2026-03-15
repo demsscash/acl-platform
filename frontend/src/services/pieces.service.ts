@@ -99,6 +99,7 @@ export interface LigneEntree {
   quantite: number;
   prixUnitaire?: number;
   emplacement?: string;
+  etat?: string; // NEUVE | OCCASION
   notes?: string;
 }
 
@@ -141,6 +142,7 @@ export interface CreateEntreeDto {
     quantite: number;
     prixUnitaire?: number;
     emplacement?: string;
+    etat?: string;
   }[];
 }
 

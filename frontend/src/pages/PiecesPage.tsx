@@ -101,14 +101,14 @@ export default function PiecesPage() {
     numeroFacture: string;
     numeroBL: string;
     notes: string;
-    lignes: { pieceId: number; quantite: number; prixUnitaire: number }[];
+    lignes: { pieceId: number; quantite: number; prixUnitaire: number; etat: string }[];
   }>({
     typeEntree: 'ACHAT',
     fournisseurId: 0,
     numeroFacture: '',
     numeroBL: '',
     notes: '',
-    lignes: [{ pieceId: 0, quantite: 1, prixUnitaire: 0 }],
+    lignes: [{ pieceId: 0, quantite: 1, prixUnitaire: 0, etat: 'NEUVE' }],
   });
 
   // Fournisseur form state
@@ -530,7 +530,7 @@ export default function PiecesPage() {
   const addLigneEntree = () => {
     setEntreeForm({
       ...entreeForm,
-      lignes: [...entreeForm.lignes, { pieceId: 0, quantite: 1, prixUnitaire: 0 }],
+      lignes: [...entreeForm.lignes, { pieceId: 0, quantite: 1, prixUnitaire: 0, etat: 'NEUVE' }],
     });
   };
 
@@ -541,7 +541,7 @@ export default function PiecesPage() {
     });
   };
 
-  const updateLigneEntree = (index: number, field: 'pieceId' | 'quantite' | 'prixUnitaire', value: number) => {
+  const updateLigneEntree = (index: number, field: 'pieceId' | 'quantite' | 'prixUnitaire' | 'etat', value: number | string) => {
     const newLignes = [...entreeForm.lignes];
     newLignes[index] = { ...newLignes[index], [field]: value };
     setEntreeForm({ ...entreeForm, lignes: newLignes });
@@ -1576,6 +1576,14 @@ export default function PiecesPage() {
                           min={0}
                           step="0.01"
                         />
+                        <select
+                          value={ligne.etat}
+                          onChange={(e) => updateLigneEntree(index, 'etat', e.target.value)}
+                          className="w-28 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        >
+                          <option value="NEUVE">Neuve</option>
+                          <option value="OCCASION">Occasion</option>
+                        </select>
                         {entreeForm.lignes.length > 1 && (
                           <button
                             type="button"
