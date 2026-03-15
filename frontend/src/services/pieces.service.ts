@@ -82,10 +82,13 @@ export interface CreateSortieDto {
   }[];
 }
 
+export type TypeFournisseur = 'PIECES' | 'PNEUMATIQUES' | 'CARBURANT' | 'GENERAL';
+
 export interface Fournisseur {
   id: number;
   code: string;
   raisonSociale: string;
+  typeFournisseur?: TypeFournisseur;
   adresse?: string;
   telephone?: string;
   email?: string;

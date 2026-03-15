@@ -115,6 +115,7 @@ export default function PiecesPage() {
   // Fournisseur form state
   const [fournisseurForm, setFournisseurForm] = useState({
     raisonSociale: '',
+    typeFournisseur: 'GENERAL' as string,
     adresse: '',
     telephone: '',
     email: '',
@@ -330,13 +331,14 @@ export default function PiecesPage() {
       setEditingFournisseur(fournisseur);
       setFournisseurForm({
         raisonSociale: fournisseur.raisonSociale,
+        typeFournisseur: fournisseur.typeFournisseur || 'GENERAL',
         adresse: fournisseur.adresse || '',
         telephone: fournisseur.telephone || '',
         email: fournisseur.email || '',
       });
     } else {
       setEditingFournisseur(null);
-      setFournisseurForm({ raisonSociale: '', adresse: '', telephone: '', email: '' });
+      setFournisseurForm({ raisonSociale: '', typeFournisseur: 'GENERAL', adresse: '', telephone: '', email: '' });
     }
     setShowFournisseurModal(true);
   };
@@ -1103,6 +1105,7 @@ export default function PiecesPage() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Raison sociale</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Adresse</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Téléphone</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
@@ -1114,6 +1117,18 @@ export default function PiecesPage() {
                   <tr key={fournisseur.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 font-mono text-sm text-gray-900">{fournisseur.code}</td>
                     <td className="px-6 py-4 font-medium text-gray-900">{fournisseur.raisonSociale}</td>
+                    <td className="px-6 py-4 text-sm">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        fournisseur.typeFournisseur === 'PIECES' ? 'bg-blue-100 text-blue-800' :
+                        fournisseur.typeFournisseur === 'PNEUMATIQUES' ? 'bg-orange-100 text-orange-800' :
+                        fournisseur.typeFournisseur === 'CARBURANT' ? 'bg-green-100 text-green-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {fournisseur.typeFournisseur === 'PIECES' ? 'Pièces' :
+                         fournisseur.typeFournisseur === 'PNEUMATIQUES' ? 'Pneus' :
+                         fournisseur.typeFournisseur === 'CARBURANT' ? 'Carburant' : 'Général'}
+                      </span>
+                    </td>
                     <td className="px-6 py-4 text-gray-500">{fournisseur.adresse || '-'}</td>
                     <td className="px-6 py-4 text-gray-500">{fournisseur.telephone || '-'}</td>
                     <td className="px-6 py-4 text-gray-500">{fournisseur.email || '-'}</td>
@@ -1755,6 +1770,19 @@ export default function PiecesPage() {
                     placeholder="Nom de l'entreprise"
                     required
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type de fournisseur</label>
+                  <select
+                    value={fournisseurForm.typeFournisseur}
+                    onChange={(e) => setFournisseurForm({ ...fournisseurForm, typeFournisseur: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  >
+                    <option value="GENERAL">Général</option>
+                    <option value="PIECES">Pièces détachées</option>
+                    <option value="PNEUMATIQUES">Pneumatiques</option>
+                    <option value="CARBURANT">Carburant</option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Adresse</label>
