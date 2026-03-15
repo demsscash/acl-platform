@@ -33,6 +33,12 @@ export class PannesController {
     return this.pannesService.getStats();
   }
 
+  @Get('alertes')
+  @ApiOperation({ summary: 'Pannes non résolues depuis plus de 2 semaines' })
+  getAlertes() {
+    return this.pannesService.getAlertesNonResolues();
+  }
+
   @Get('camion/:camionId')
   @ApiOperation({ summary: 'Pannes d\'un camion' })
   findByCamion(@Param('camionId') camionId: string) {
