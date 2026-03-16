@@ -40,6 +40,16 @@ export class CreateMouvementDto {
   @IsString()
   @IsOptional()
   referenceExterne?: string;
+
+  @ApiPropertyOptional({ description: 'Mode de paiement' })
+  @IsString()
+  @IsOptional()
+  modePaiement?: string;
+
+  @ApiPropertyOptional({ description: 'Numéro de référence' })
+  @IsString()
+  @IsOptional()
+  numeroReference?: string;
 }
 
 export class VirementDto {
