@@ -11,6 +11,7 @@ import type {
   CreateEntreeDto,
   TypeEntree,
   Fournisseur,
+  TypeFournisseur,
 } from '../services/pieces.service';
 import camionsService from '../services/camions.service';
 import { exportToCSV, printTable } from '../utils/export';
@@ -115,7 +116,7 @@ export default function PiecesPage() {
   // Fournisseur form state
   const [fournisseurForm, setFournisseurForm] = useState({
     raisonSociale: '',
-    typeFournisseur: 'GENERAL' as string,
+    typeFournisseur: 'GENERAL' as TypeFournisseur,
     adresse: '',
     telephone: '',
     email: '',
@@ -332,7 +333,7 @@ export default function PiecesPage() {
       numeroFacture: '',
       numeroBL: '',
       notes: '',
-      lignes: [{ pieceId: 0, quantite: 1, prixUnitaire: 0 }],
+      lignes: [{ pieceId: 0, quantite: 1, prixUnitaire: 0, etat: 'NEUVE' }],
     });
     setShowEntreeModal(true);
   };
@@ -1791,7 +1792,7 @@ export default function PiecesPage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type de fournisseur</label>
                   <select
                     value={fournisseurForm.typeFournisseur}
-                    onChange={(e) => setFournisseurForm({ ...fournisseurForm, typeFournisseur: e.target.value })}
+                    onChange={(e) => setFournisseurForm({ ...fournisseurForm, typeFournisseur: e.target.value as TypeFournisseur })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   >
                     <option value="GENERAL">Général</option>
