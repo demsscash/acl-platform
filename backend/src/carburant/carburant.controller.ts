@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Req } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
 import { CarburantService } from './carburant.service';
@@ -58,6 +58,40 @@ export class CarburantController {
   @ApiOperation({ summary: 'Ravitailler une cuve (simple)' })
   ravitaillerCuve(@Param('id') id: string, @Body('quantiteLitres') quantiteLitres: number) {
     return this.carburantService.ravitaillerCuve(+id, quantiteLitres);
+  }
+
+  @Post('cuves/:id/cloturer')
+  @ApiOperation({ summary: 'Clôturer une cuve (stock épuisé)' })
+  cloturerCuve(@Param('id') id: string) {
+    return this.carburantService.cloturerCuve(+id);
+  }
+
+  @Get('cuves/:id/dotations')
+  @ApiOperation({ summary: 'Enlèvements (dotations) par période pour une cuve' })
+  getDotationsByCuve(
+    @Param('id') id: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.carburantService.findDotationsByCuvePeriod(
+      +id,
+      startDate ? new Date(startDate) : undefined,
+      endDate ? new Date(endDate) : undefined,
+    );
+  }
+
+  @Get('cuves/:id/appros')
+  @ApiOperation({ summary: 'Approvisionnements par période pour une cuve' })
+  getApprosByCuve(
+    @Param('id') id: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.carburantService.findApprovisionnementsByCuvePeriod(
+      +id,
+      startDate ? new Date(startDate) : undefined,
+      endDate ? new Date(endDate) : undefined,
+    );
   }
 
   // Approvisionnements endpoints

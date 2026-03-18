@@ -85,21 +85,21 @@ export const ROLE_PERMISSIONS: Record<RoleUtilisateur, Record<Module, Action[]>>
 
   [RoleUtilisateur.RESPONSABLE_LOGISTIQUE]: {
     [Module.USERS]: [], // Pas d'accès à la gestion des utilisateurs
-    [Module.CAMIONS]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.CHAUFFEURS]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.TRANSPORT]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.LOCATION]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
+    [Module.CAMIONS]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+    [Module.CHAUFFEURS]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+    [Module.TRANSPORT]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+    [Module.LOCATION]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
     [Module.GPS]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
     [Module.ALERTES]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
-    [Module.PANNES]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.ENTRETIEN]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.PIECES]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.PNEUMATIQUES]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.CARBURANT]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.CLIENTS]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.FOURNISSEURS]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE, Action.VIEW_FINANCIAL],
-    [Module.EXPORT]: [Action.READ, Action.CREATE],
-    [Module.CAISSES]: [], // Pas d'accès aux caisses
+    [Module.PANNES]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+    [Module.ENTRETIEN]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+    [Module.PIECES]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+    [Module.PNEUMATIQUES]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+    [Module.CARBURANT]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+    [Module.CLIENTS]: [], // Comptabilité - accès restreint
+    [Module.FOURNISSEURS]: [Action.READ, Action.CREATE, Action.UPDATE, Action.DELETE],
+    [Module.EXPORT]: [],  // Comptabilité - accès restreint
+    [Module.CAISSES]: [], // Comptabilité - accès restreint
     [Module.CONFIG]: [Action.READ],
   },
 

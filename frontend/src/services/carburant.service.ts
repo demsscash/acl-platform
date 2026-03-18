@@ -145,6 +145,11 @@ export const carburantService = {
     await api.delete(`/carburant/cuves/${id}`);
   },
 
+  async cloturerCuve(id: number): Promise<Cuve> {
+    const response = await api.post<Cuve>(`/carburant/cuves/${id}/cloturer`);
+    return response.data;
+  },
+
   // Approvisionnements
   async getApprovisionnements(): Promise<ApprovisionnementCuve[]> {
     const response = await api.get<ApprovisionnementCuve[]>('/carburant/approvisionnements');

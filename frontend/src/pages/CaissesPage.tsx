@@ -815,7 +815,7 @@ export default function CaissesPage() {
                     type="number"
                     value={virementForm.montant}
                     onChange={(e) => setVirementForm({ ...virementForm, montant: Number(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-48 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                     required
                     min="1"
                     max={Number(caisseCentrale.soldeActuel)}

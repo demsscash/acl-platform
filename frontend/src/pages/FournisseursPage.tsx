@@ -33,6 +33,7 @@ export default function FournisseursPage() {
 
   const [formData, setFormData] = useState({
     raisonSociale: '',
+    typeFournisseur: 'GENERAL',
     adresse: '',
     telephone: '',
     email: '',
@@ -86,7 +87,7 @@ export default function FournisseursPage() {
 
   const openCreateModal = () => {
     setEditingFournisseur(null);
-    setFormData({ raisonSociale: '', adresse: '', telephone: '', email: '' });
+    setFormData({ raisonSociale: '', typeFournisseur: 'GENERAL', adresse: '', telephone: '', email: '' });
     setShowModal(true);
   };
 
@@ -94,6 +95,7 @@ export default function FournisseursPage() {
     setEditingFournisseur(fournisseur);
     setFormData({
       raisonSociale: fournisseur.raisonSociale,
+      typeFournisseur: (fournisseur as any).typeFournisseur || 'GENERAL',
       adresse: fournisseur.adresse || '',
       telephone: fournisseur.telephone || '',
       email: fournisseur.email || '',
@@ -308,6 +310,7 @@ export default function FournisseursPage() {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Raison sociale</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Entrées</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Montant total</th>
@@ -326,6 +329,16 @@ export default function FournisseursPage() {
                     {fournisseur.adresse && (
                       <div className="text-sm text-gray-500">{fournisseur.adresse}</div>
                     )}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                      (fournisseur as any).typeFournisseur === 'PIECES' ? 'bg-blue-100 text-blue-800' :
+                      (fournisseur as any).typeFournisseur === 'PNEUMATIQUES' ? 'bg-purple-100 text-purple-800' :
+                      (fournisseur as any).typeFournisseur === 'CARBURANT' ? 'bg-orange-100 text-orange-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {(fournisseur as any).typeFournisseur || 'GENERAL'}
+                    </span>
                   </td>
                   <td className="px-6 py-4">
                     {fournisseur.telephone && (
@@ -399,6 +412,20 @@ export default function FournisseursPage() {
                     placeholder="Nom de l'entreprise"
                     required
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type de fournisseur *</label>
+                  <select
+                    value={formData.typeFournisseur}
+                    onChange={(e) => setFormData({ ...formData, typeFournisseur: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    required
+                  >
+                    <option value="GENERAL">Général</option>
+                    <option value="PIECES">Pièces</option>
+                    <option value="PNEUMATIQUES">Pneumatiques</option>
+                    <option value="CARBURANT">Carburant</option>
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Adresse</label>
