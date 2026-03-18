@@ -12,6 +12,7 @@ export default function GpsPage() {
   const [showModal, setShowModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState<'all' | 'online' | 'offline'>('all');
   const [formData, setFormData] = useState({
+    nom: '',
     imei: '',
     camionId: undefined as number | undefined,
     simNumero: '',
@@ -401,6 +402,7 @@ export default function GpsPage() {
           <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Nom</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">IMEI</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Camion</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Modèle</th>
@@ -411,6 +413,7 @@ export default function GpsPage() {
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {trackers?.map((tracker) => (
                 <tr key={tracker.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-6 py-4 text-gray-900 dark:text-white">{(tracker as any).nom || '-'}</td>
                   <td className="px-6 py-4 font-mono text-sm text-gray-900 dark:text-white">{tracker.imei}</td>
                   <td className="px-6 py-4 text-gray-900 dark:text-white">
                     {tracker.camion?.immatriculation || '-'}
@@ -432,7 +435,7 @@ export default function GpsPage() {
               ))}
               {(!trackers || trackers.length === 0) && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
+                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
                     Aucun tracker enregistré
                   </td>
                 </tr>
@@ -597,6 +600,16 @@ export default function GpsPage() {
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Nouveau tracker GPS</h2>
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom</label>
+                  <input
+                    type="text"
+                    value={formData.nom}
+                    onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:text-white"
+                    placeholder="Tracker principal"
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">IMEI *</label>
                   <input
