@@ -218,6 +218,13 @@ export default function CarburantPage() {
     },
   });
 
+  const cloturerCuveMutation = useMutation({
+    mutationFn: carburantService.cloturerCuve,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cuves'] });
+    },
+  });
+
   const handleDeleteCuve = (cuve: Cuve) => {
     setConfirmModal({
       show: true,
@@ -225,6 +232,18 @@ export default function CarburantPage() {
       message: `Voulez-vous vraiment supprimer la cuve "${cuve.nom}" ?`,
       onConfirm: () => {
         deleteCuveMutation.mutate(cuve.id);
+        setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} });
+      },
+    });
+  };
+
+  const handleCloturerCuve = (cuve: Cuve) => {
+    setConfirmModal({
+      show: true,
+      title: 'Clôturer la cuve',
+      message: `Clôturer la cuve "${cuve.nom}" ? Le stock sera remis à zéro et la cuve sera désactivée. Les historiques d'enlèvements et appros seront conservés.`,
+      onConfirm: () => {
+        cloturerCuveMutation.mutate(cuve.id);
         setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} });
       },
     });
@@ -422,7 +441,7 @@ export default function CarburantPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {cuves?.map((cuve) => (
-                  <CuveCard key={cuve.id} cuve={cuve} onDelete={handleDeleteCuve} />
+                  <CuveCard key={cuve.id} cuve={cuve} onDelete={handleDeleteCuve} onCloturer={handleCloturerCuve} />
                 ))}
               </div>
             )}
@@ -1481,7 +1500,7 @@ export default function CarburantPage() {
 }
 
 // Cuve Card Component
-function CuveCard({ cuve, onDelete }: { cuve: Cuve; onDelete: (cuve: Cuve) => void }) {
+function CuveCard({ cuve, onDelete, onCloturer }: { cuve: Cuve; onDelete: (cuve: Cuve) => void; onCloturer: (cuve: Cuve) => void }) {
   const pourcentage = Math.round((cuve.niveauActuelLitres / cuve.capaciteLitres) * 100);
   const isLow = cuve.niveauActuelLitres <= cuve.seuilAlerteBas;
 
@@ -1498,6 +1517,15 @@ function CuveCard({ cuve, onDelete }: { cuve: Cuve; onDelete: (cuve: Cuve) => vo
           }`}>
             {cuve.typeCarburant}
           </span>
+          <button
+            onClick={() => onCloturer(cuve)}
+            className="p-1 text-gray-400 hover:text-orange-600 transition-colors"
+            title="Clôturer la cuve"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </button>
           <button
             onClick={() => onDelete(cuve)}
             className="p-1 text-gray-400 hover:text-red-600 transition-colors"

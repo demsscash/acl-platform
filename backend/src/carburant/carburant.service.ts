@@ -54,6 +54,59 @@ export class CarburantService {
     await this.cuveRepository.save(cuve);
   }
 
+  // Clôturer une cuve (stock épuisé, fermer la cuve)
+  async cloturerCuve(cuveId: number): Promise<CuveCarburant> {
+    const cuve = await this.findOneCuve(cuveId);
+    cuve.actif = false;
+    cuve.niveauActuelLitres = 0;
+    return this.cuveRepository.save(cuve);
+  }
+
+  // Lister les dotations (enlèvements) par période pour une cuve
+  async findDotationsByCuvePeriod(
+    cuveId: number,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<DotationCarburant[]> {
+    const qb = this.dotationRepository
+      .createQueryBuilder('d')
+      .leftJoinAndSelect('d.camion', 'camion')
+      .leftJoinAndSelect('d.chauffeur', 'chauffeur')
+      .where('d.cuve_id = :cuveId', { cuveId })
+      .orderBy('d.date_dotation', 'DESC');
+
+    if (startDate) {
+      qb.andWhere('d.date_dotation >= :startDate', { startDate });
+    }
+    if (endDate) {
+      qb.andWhere('d.date_dotation <= :endDate', { endDate });
+    }
+
+    return qb.getMany();
+  }
+
+  // Lister les appros par période pour une cuve
+  async findApprovisionnementsByCuvePeriod(
+    cuveId: number,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<ApprovisionnementCuve[]> {
+    const qb = this.approvisionnementRepository
+      .createQueryBuilder('a')
+      .leftJoinAndSelect('a.fournisseur', 'fournisseur')
+      .where('a.cuve_id = :cuveId', { cuveId })
+      .orderBy('a.date_approvisionnement', 'DESC');
+
+    if (startDate) {
+      qb.andWhere('a.date_approvisionnement >= :startDate', { startDate });
+    }
+    if (endDate) {
+      qb.andWhere('a.date_approvisionnement <= :endDate', { endDate });
+    }
+
+    return qb.getMany();
+  }
+
   // Dotations
   async findAllDotations(): Promise<DotationCarburant[]> {
     return this.dotationRepository.find({
@@ -235,12 +288,14 @@ export class CarburantService {
     return this.approvisionnementRepository.save(approvisionnement) as Promise<ApprovisionnementCuve>;
   }
 
-  // Fournisseurs (carburant)
+  // Fournisseurs (carburant) - filtre uniquement CARBURANT et GENERAL
   async findAllFournisseurs(): Promise<Fournisseur[]> {
-    return this.fournisseurRepository.find({
-      where: { actif: true },
-      order: { raisonSociale: 'ASC' },
-    });
+    return this.fournisseurRepository
+      .createQueryBuilder('f')
+      .where('f.actif = true')
+      .andWhere('f.type_fournisseur IN (:...types)', { types: ['CARBURANT', 'GENERAL'] })
+      .orderBy('f.raison_sociale', 'ASC')
+      .getMany();
   }
 
   // Stats cuve

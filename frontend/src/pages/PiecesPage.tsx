@@ -1594,10 +1594,21 @@ export default function PiecesPage() {
                             emptyLabel="-- Sélectionner une pièce --"
                             allowEmpty={false}
                             options={
-                              pieces?.map(piece => ({
+                              (pieces?.filter(piece => {
+                                // Filtrer les pièces selon le type de fournisseur sélectionné
+                                const selectedFournisseur = fournisseurs?.find(f => f.id === entreeForm.fournisseurId);
+                                if (!selectedFournisseur || !selectedFournisseur.typeFournisseur || selectedFournisseur.typeFournisseur === 'GENERAL') return true;
+                                if (selectedFournisseur.typeFournisseur === 'PNEUMATIQUES') {
+                                  return piece.categorie?.toUpperCase().includes('PNEU');
+                                }
+                                if (selectedFournisseur.typeFournisseur === 'PIECES') {
+                                  return !piece.categorie?.toUpperCase().includes('PNEU');
+                                }
+                                return true;
+                              }) || []).map(piece => ({
                                 value: piece.id,
                                 label: `${piece.reference} - ${piece.designation}`,
-                              })) || []
+                              }))
                             }
                           />
                         </div>
