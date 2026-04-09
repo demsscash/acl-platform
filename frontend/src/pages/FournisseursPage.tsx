@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import piecesService from '../services/pieces.service';
-import type { Fournisseur, EntreeStock } from '../services/pieces.service';
+import type { Fournisseur, EntreeStock, TypeFournisseur } from '../services/pieces.service';
 import { exportToCSV, printTable } from '../utils/export';
 import { useToast } from '../components/ui/Toast';
 import { SkeletonTable, Breadcrumb } from '../components/ui';
@@ -31,9 +31,9 @@ export default function FournisseursPage() {
     onConfirm: () => void;
   }>({ show: false, title: '', message: '', onConfirm: () => {} });
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Partial<Fournisseur>>({
     raisonSociale: '',
-    typeFournisseur: 'GENERAL',
+    typeFournisseur: 'GENERAL' as TypeFournisseur,
     adresse: '',
     telephone: '',
     email: '',
@@ -87,7 +87,7 @@ export default function FournisseursPage() {
 
   const openCreateModal = () => {
     setEditingFournisseur(null);
-    setFormData({ raisonSociale: '', typeFournisseur: 'GENERAL', adresse: '', telephone: '', email: '' });
+    setFormData({ raisonSociale: '', typeFournisseur: 'GENERAL' as TypeFournisseur, adresse: '', telephone: '', email: '' });
     setShowModal(true);
   };
 
@@ -95,7 +95,7 @@ export default function FournisseursPage() {
     setEditingFournisseur(fournisseur);
     setFormData({
       raisonSociale: fournisseur.raisonSociale,
-      typeFournisseur: (fournisseur as any).typeFournisseur || 'GENERAL',
+      typeFournisseur: ((fournisseur as any).typeFournisseur || 'GENERAL') as TypeFournisseur,
       adresse: fournisseur.adresse || '',
       telephone: fournisseur.telephone || '',
       email: fournisseur.email || '',
@@ -417,7 +417,7 @@ export default function FournisseursPage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type de fournisseur *</label>
                   <select
                     value={formData.typeFournisseur}
-                    onChange={(e) => setFormData({ ...formData, typeFournisseur: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, typeFournisseur: e.target.value as TypeFournisseur })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     required
                   >
