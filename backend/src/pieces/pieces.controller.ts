@@ -13,7 +13,7 @@ import { RoleUtilisateur } from '../database/entities/user.entity';
 @UseGuards(JwtAuthGuard)
 @Controller('api/pieces')
 export class PiecesController {
-  constructor(private readonly piecesService: PiecesService) {}
+  constructor(private readonly piecesService: PiecesService) { }
 
   // Catalogue endpoints
   @Get()
@@ -397,5 +397,11 @@ export class PiecesController {
   @ApiOperation({ summary: 'Modifier une pièce' })
   updatePiece(@Param('id') id: string, @Body() data: any) {
     return this.piecesService.updatePiece(+id, data);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Supprimer une pièce' })
+  deletePiece(@Param('id') id: string) {
+    return this.piecesService.deletePiece(+id);
   }
 }

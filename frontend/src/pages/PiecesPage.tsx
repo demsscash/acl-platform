@@ -69,7 +69,7 @@ export default function PiecesPage() {
     title: string;
     message: string;
     onConfirm: () => void;
-  }>({ show: false, title: '', message: '', onConfirm: () => {} });
+  }>({ show: false, title: '', message: '', onConfirm: () => { } });
 
   const [formData, setFormData] = useState<CreatePieceDto>({
     reference: '',
@@ -186,6 +186,26 @@ export default function PiecesPage() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: piecesService.delete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pieces'] });
+      queryClient.invalidateQueries({ queryKey: ['pieces-stock'] });
+    },
+  });
+
+  const handleDeletePiece = (piece: CataloguePiece) => {
+    setConfirmModal({
+      show: true,
+      title: 'Confirmer la suppression',
+      message: `Voulez-vous vraiment supprimer la pièce ${piece.reference} - ${piece.designation} ? Si elle est liée à des mouvements de stock, la suppression pourrait échouer.`,
+      onConfirm: () => {
+        deleteMutation.mutate(piece.id);
+        setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } });
+      },
+    });
+  };
+
   const createSortieMutation = useMutation({
     mutationFn: piecesService.createSortie,
     onSuccess: () => {
@@ -238,7 +258,7 @@ export default function PiecesPage() {
       message: `Voulez-vous vraiment supprimer le fournisseur ${fournisseur.raisonSociale} ?`,
       onConfirm: () => {
         deleteFournisseurMutation.mutate(fournisseur.id);
-        setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} });
+        setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } });
       },
     });
   };
@@ -568,7 +588,7 @@ export default function PiecesPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Pièces & Stock</h1>
           <p className="text-gray-600">Catalogue, stock et sorties de pièces</p>
@@ -643,71 +663,64 @@ export default function PiecesPage() {
         <nav className="flex gap-4">
           <button
             onClick={() => setActiveTab('catalogue')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'catalogue'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+            className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'catalogue'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
           >
             Catalogue
           </button>
           <button
             onClick={() => setActiveTab('stock')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'stock'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+            className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'stock'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
           >
             État du stock
           </button>
           <button
             onClick={() => setActiveTab('entrees')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'entrees'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+            className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'entrees'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
           >
             Entrées
           </button>
           <button
             onClick={() => setActiveTab('sorties')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'sorties'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+            className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'sorties'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
           >
             Sorties
           </button>
           <button
             onClick={() => setActiveTab('mouvements')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'mouvements'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+            className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'mouvements'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
           >
             Mouvements
           </button>
           <button
             onClick={() => setActiveTab('fournisseurs')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'fournisseurs'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+            className={`py-3 px-1 border-b-2 font-medium text-sm ${activeTab === 'fournisseurs'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
           >
             Fournisseurs
           </button>
           <button
             onClick={() => setActiveTab('alertes')}
-            className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${
-              activeTab === 'alertes'
-                ? 'border-yellow-500 text-yellow-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
+            className={`py-3 px-1 border-b-2 font-medium text-sm flex items-center gap-2 ${activeTab === 'alertes'
+              ? 'border-yellow-500 text-yellow-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
           >
             Alertes
             {alertes && alertes.length > 0 && (
@@ -721,8 +734,8 @@ export default function PiecesPage() {
 
       {/* Catalogue Tab */}
       {activeTab === 'catalogue' && (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+          <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">N° Pièce</th>
@@ -759,12 +772,20 @@ export default function PiecesPage() {
                     </td>
                     <td className="px-6 py-4 text-gray-500">{piece.stockMinimum}</td>
                     <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => openEditModal(piece)}
-                        className="text-blue-600 hover:text-blue-800"
-                      >
-                        Modifier
-                      </button>
+                      <div className="flex justify-end gap-2">
+                        <button
+                          onClick={() => openEditModal(piece)}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          Modifier
+                        </button>
+                        <button
+                          onClick={() => handleDeletePiece(piece)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          Supprimer
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -777,7 +798,7 @@ export default function PiecesPage() {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
@@ -804,8 +825,8 @@ export default function PiecesPage() {
               Imprimer
             </button>
           </div>
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+            <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th>
@@ -814,35 +835,35 @@ export default function PiecesPage() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Réservé</th>
                 </tr>
               </thead>
-            <tbody className="divide-y divide-gray-200">
-              {stock?.map((s: StockPiece) => (
-                <tr key={s.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-gray-900">{s.piece?.designation}</div>
-                    <div className="text-sm text-gray-500">{s.piece?.reference}</div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-900">{s.emplacement || '-'}</td>
-                  <td className="px-6 py-4 font-medium text-gray-900">{s.quantiteDisponible}</td>
-                  <td className="px-6 py-4 text-gray-500">{s.quantiteReservee}</td>
-                </tr>
-              ))}
-              {(!stock || stock.length === 0) && (
-                <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
-                    Aucun stock enregistré
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+              <tbody className="divide-y divide-gray-200">
+                {stock?.map((s: StockPiece) => (
+                  <tr key={s.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div className="font-medium text-gray-900">{s.piece?.designation}</div>
+                      <div className="text-sm text-gray-500">{s.piece?.reference}</div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-900">{s.emplacement || '-'}</td>
+                    <td className="px-6 py-4 font-medium text-gray-900">{s.quantiteDisponible}</td>
+                    <td className="px-6 py-4 text-gray-500">{s.quantiteReservee}</td>
+                  </tr>
+                ))}
+                {(!stock || stock.length === 0) && (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
+                      Aucun stock enregistré
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table></div>
           </div>
         </div>
       )}
 
       {/* Entrées Tab */}
       {activeTab === 'entrees' && (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+          <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">N° Bon</th>
@@ -862,11 +883,10 @@ export default function PiecesPage() {
                     {new Date(entree.dateEntree).toLocaleDateString('fr-FR')}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded text-sm ${
-                      entree.typeEntree === 'ACHAT' ? 'bg-green-100 text-green-800' :
+                    <span className={`px-2 py-1 rounded text-sm ${entree.typeEntree === 'ACHAT' ? 'bg-green-100 text-green-800' :
                       entree.typeEntree === 'RETOUR' ? 'bg-orange-100 text-orange-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                        'bg-gray-100 text-gray-800'
+                      }`}>
                       {typeEntreeLabels[entree.typeEntree]}
                     </span>
                   </td>
@@ -897,14 +917,14 @@ export default function PiecesPage() {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
       {/* Sorties Tab */}
       {activeTab === 'sorties' && (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+          <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">N° Bon</th>
@@ -928,12 +948,11 @@ export default function PiecesPage() {
                     <div className="text-sm text-gray-500">{sortie.camion?.typeCamion}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded text-sm ${
-                      sortie.motif === 'PANNE' ? 'bg-red-100 text-red-800' :
+                    <span className={`px-2 py-1 rounded text-sm ${sortie.motif === 'PANNE' ? 'bg-red-100 text-red-800' :
                       sortie.motif === 'REPARATION' ? 'bg-orange-100 text-orange-800' :
-                      sortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                        sortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
+                      }`}>
                       {motifLabels[sortie.motif]}
                     </span>
                   </td>
@@ -961,7 +980,7 @@ export default function PiecesPage() {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
@@ -1035,8 +1054,8 @@ export default function PiecesPage() {
               </button>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+            <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
@@ -1054,9 +1073,8 @@ export default function PiecesPage() {
                       {new Date(mouvement.date).toLocaleDateString('fr-FR')}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2 py-1 rounded text-sm ${
-                        mouvement.type === 'ENTREE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
+                      <span className={`px-2 py-1 rounded text-sm ${mouvement.type === 'ENTREE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
                         {mouvement.type === 'ENTREE' ? 'Entrée' : 'Sortie'}
                       </span>
                     </td>
@@ -1084,7 +1102,7 @@ export default function PiecesPage() {
                   </tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         </div>
       )}
@@ -1100,8 +1118,8 @@ export default function PiecesPage() {
               + Nouveau fournisseur
             </button>
           </div>
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+            <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
@@ -1157,7 +1175,7 @@ export default function PiecesPage() {
                   </tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         </div>
       )}
@@ -1398,12 +1416,11 @@ export default function PiecesPage() {
                   {new Date(selectedSortie.dateSortie).toLocaleDateString('fr-FR')}
                 </p>
               </div>
-              <span className={`px-3 py-1 rounded text-sm ${
-                selectedSortie.motif === 'PANNE' ? 'bg-red-100 text-red-800' :
+              <span className={`px-3 py-1 rounded text-sm ${selectedSortie.motif === 'PANNE' ? 'bg-red-100 text-red-800' :
                 selectedSortie.motif === 'REPARATION' ? 'bg-orange-100 text-orange-800' :
-                selectedSortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
-                'bg-gray-100 text-gray-800'
-              }`}>
+                  selectedSortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
+                    'bg-gray-100 text-gray-800'
+                }`}>
                 {motifLabels[selectedSortie.motif]}
               </span>
             </div>
@@ -1665,11 +1682,10 @@ export default function PiecesPage() {
                   {new Date(selectedEntree.dateEntree).toLocaleDateString('fr-FR')}
                 </p>
               </div>
-              <span className={`px-3 py-1 rounded text-sm ${
-                selectedEntree.typeEntree === 'ACHAT' ? 'bg-green-100 text-green-800' :
+              <span className={`px-3 py-1 rounded text-sm ${selectedEntree.typeEntree === 'ACHAT' ? 'bg-green-100 text-green-800' :
                 selectedEntree.typeEntree === 'RETOUR' ? 'bg-orange-100 text-orange-800' :
-                'bg-gray-100 text-gray-800'
-              }`}>
+                  'bg-gray-100 text-gray-800'
+                }`}>
                 {typeEntreeLabels[selectedEntree.typeEntree]}
               </span>
             </div>
@@ -1927,7 +1943,7 @@ export default function PiecesPage() {
             <p className="text-gray-600 dark:text-gray-300 mb-6">{confirmModal.message}</p>
             <div className="flex justify-end gap-3">
               <button
-                onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} })}
+                onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } })}
                 className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
               >
                 Annuler

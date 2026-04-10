@@ -361,7 +361,7 @@ export default function ClientsPage() {
                 </tr>
               `).join('')}
             </tbody>
-          </table>
+          </table></div>
         ` : ''}
 
         ${data.locations.length > 0 ? `
@@ -397,7 +397,7 @@ export default function ClientsPage() {
                 </tr>
               `}).join('')}
             </tbody>
-          </table>
+          </table></div>
         ` : ''}
 
         <div class="footer">
@@ -418,7 +418,7 @@ export default function ClientsPage() {
     return (
       <div>
         <Breadcrumb />
-        <div className="flex justify-between items-center mb-6">
+        <div className="page-header">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestion des Clients</h1>
             <p className="text-gray-600 dark:text-gray-300">Gérez vos clients et consultez leur historique de prestations</p>
@@ -441,7 +441,7 @@ export default function ClientsPage() {
     <div>
       <Breadcrumb />
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestion des Clients</h1>
           <p className="text-gray-600 dark:text-gray-300">Gérez vos clients et consultez leur historique de prestations</p>
@@ -570,7 +570,7 @@ export default function ClientsPage() {
             Imprimer
           </button>
         </div>
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Code</th>
@@ -649,7 +649,7 @@ export default function ClientsPage() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       {/* Modal Création/Édition */}
@@ -764,7 +764,7 @@ export default function ClientsPage() {
 
       {/* Modal Historique */}
       {showHistorique && selectedClient && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4 px-4">
           <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
             <div className="p-6 border-b dark:border-gray-700 flex justify-between items-center">
               <div>
@@ -848,7 +848,7 @@ export default function ClientsPage() {
                       Bons de Transport ({historique.transports.length})
                     </h3>
                     <div className="border dark:border-gray-700 rounded-lg overflow-hidden overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Date</th>
@@ -899,7 +899,7 @@ export default function ClientsPage() {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}
@@ -912,7 +912,7 @@ export default function ClientsPage() {
                       Bons de Location ({historique.locations.length})
                     </h3>
                     <div className="border dark:border-gray-700 rounded-lg overflow-hidden overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-700">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300">Période</th>
@@ -955,7 +955,7 @@ export default function ClientsPage() {
                             );
                           })}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}

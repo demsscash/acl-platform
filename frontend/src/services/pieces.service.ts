@@ -171,6 +171,10 @@ export const piecesService = {
     return response.data;
   },
 
+  async delete(id: number): Promise<void> {
+    await api.delete(`/pieces/${id}`);
+  },
+
   // Stock
   async getStock(): Promise<StockPiece[]> {
     const response = await api.get<StockPiece[]>('/pieces/stock/all');

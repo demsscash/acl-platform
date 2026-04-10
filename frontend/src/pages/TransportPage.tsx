@@ -519,7 +519,7 @@ export default function TransportPage() {
                 <td class="amount">${montantNet.toLocaleString('fr-FR')} FCFA</td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         ${bon.notes ? `
@@ -649,7 +649,7 @@ export default function TransportPage() {
     return (
       <div>
         <Breadcrumb />
-        <div className="flex justify-between items-center mb-6">
+        <div className="page-header">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Gestion du Transport</h1>
             <p className="text-gray-600">Bons de transport et missions</p>
@@ -664,7 +664,7 @@ export default function TransportPage() {
     <div>
       <Breadcrumb />
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gestion du Transport</h1>
           <p className="text-gray-600">Bons de transport et missions</p>
@@ -746,7 +746,7 @@ export default function TransportPage() {
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
         {/* Search and Export */}
         <div className="p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between gap-4">
           {/* Search Input */}
@@ -849,7 +849,7 @@ export default function TransportPage() {
             {filteredAndSortedBons.length} résultat(s) trouvé(s)
           </div>
         )}
-        <table className="min-w-full divide-y divide-gray-200">
+        <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th
@@ -978,7 +978,7 @@ export default function TransportPage() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
 
         {/* Pagination */}
         {filteredAndSortedBons.length > 0 && (

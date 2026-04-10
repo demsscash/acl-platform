@@ -172,7 +172,7 @@ export default function AlertesPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gestion des Alertes</h1>
           <p className="text-gray-600">Suivi et traitement des alertes système</p>

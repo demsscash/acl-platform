@@ -192,7 +192,7 @@ export default function PneumatiquesPage() {
   return (
     <div>
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Pneumatiques</h1>
           <p className="text-gray-600">Gestion du stock et suivi des pneus</p>
@@ -314,8 +314,8 @@ export default function PneumatiquesPage() {
           </div>
 
           {/* Stock Table */}
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+            <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">N° Série</th>
@@ -396,15 +396,15 @@ export default function PneumatiquesPage() {
                   </tr>
                 )}
               </tbody>
-            </table>
+            </table></div>
           </div>
         </>
       )}
 
       {/* Catalogue Tab */}
       {activeTab === 'catalogue' && (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+          <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Référence</th>
@@ -442,14 +442,14 @@ export default function PneumatiquesPage() {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
       {/* Contrôles Tab */}
       {activeTab === 'controles' && (
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
+          <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
@@ -501,7 +501,7 @@ export default function PneumatiquesPage() {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 
