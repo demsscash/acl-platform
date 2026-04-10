@@ -245,7 +245,7 @@ export default function CaissesPage() {
       <Breadcrumb />
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestion des Caisses</h1>
           <p className="text-gray-600 dark:text-gray-400">Comptabilité et mouvements de trésorerie</p>
@@ -422,7 +422,7 @@ export default function CaissesPage() {
               </svg>
             </button>
           </div>
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Date</th>
@@ -511,7 +511,7 @@ export default function CaissesPage() {
                 </tr>
               )}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 

@@ -579,7 +579,7 @@ export default function ChauffeursPage() {
                 </tr>
               `).join('')}
             </tbody>
-          </table>
+          </table></div>
         ` : ''}
 
         ${data.locations.length > 0 ? `
@@ -616,7 +616,7 @@ export default function ChauffeursPage() {
                 </tr>
               `}).join('')}
             </tbody>
-          </table>
+          </table></div>
         ` : ''}
 
         ${data.pannes && data.pannes.length > 0 ? `
@@ -646,7 +646,7 @@ export default function ChauffeursPage() {
                 </tr>
               `).join('')}
             </tbody>
-          </table>
+          </table></div>
         ` : ''}
 
         <div class="footer">
@@ -667,7 +667,7 @@ export default function ChauffeursPage() {
     return (
       <div>
         <Breadcrumb />
-        <div className="flex justify-between items-center mb-6">
+        <div className="page-header">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Gestion des Chauffeurs</h1>
             <p className="text-gray-600">Gérez les profils administratifs des chauffeurs</p>
@@ -690,7 +690,7 @@ export default function ChauffeursPage() {
     <div>
       <Breadcrumb />
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Gestion des Chauffeurs</h1>
           <p className="text-gray-600">Gérez les profils administratifs des chauffeurs</p>
@@ -780,7 +780,7 @@ export default function ChauffeursPage() {
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden overflow-x-auto">
         {/* Search and Export */}
         <div className="p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between gap-4">
           {/* Search Input */}
@@ -875,7 +875,7 @@ export default function ChauffeursPage() {
             {filteredAndSortedChauffeurs.length} résultat(s) trouvé(s)
           </div>
         )}
-        <table className="min-w-full divide-y divide-gray-200">
+        <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th
@@ -978,7 +978,7 @@ export default function ChauffeursPage() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       {/* Modal */}
@@ -1117,7 +1117,7 @@ export default function ChauffeursPage() {
 
       {/* Fiche d'information Modal */}
       {showHistorique && selectedChauffeur && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4 px-4">
           <div className="bg-white rounded-lg w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
             <div className="p-6 border-b flex justify-between items-center bg-gradient-to-r from-yellow-500 to-yellow-400">
               <div className="flex items-center gap-4">
@@ -1266,7 +1266,7 @@ export default function ChauffeursPage() {
                       Bons de Transport ({historique.transports.length})
                     </h3>
                     <div className="border rounded-lg overflow-hidden overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Date</th>
@@ -1336,7 +1336,7 @@ export default function ChauffeursPage() {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                       <div className="px-4 py-2 bg-gray-50 text-xs text-gray-500 border-t">
                         <span className="text-blue-600">*</span> Montant provisoire (en cours)
                       </div>
@@ -1352,7 +1352,7 @@ export default function ChauffeursPage() {
                       Bons de Location ({historique.locations.length})
                     </h3>
                     <div className="border rounded-lg overflow-hidden overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Période</th>
@@ -1425,7 +1425,7 @@ export default function ChauffeursPage() {
                             );
                           })}
                         </tbody>
-                      </table>
+                      </table></div>
                       <div className="px-4 py-2 bg-gray-50 text-xs text-gray-500 border-t">
                         <span className="text-blue-600">*</span> Montant provisoire (location en cours)
                       </div>
@@ -1441,7 +1441,7 @@ export default function ChauffeursPage() {
                       Dotations Carburant ({historique.dotations.length})
                     </h3>
                     <div className="border rounded-lg overflow-hidden overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Date</th>
@@ -1468,7 +1468,7 @@ export default function ChauffeursPage() {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}
@@ -1481,7 +1481,7 @@ export default function ChauffeursPage() {
                       Pannes signalées ({historique.pannes.length})
                     </h3>
                     <div className="border rounded-lg overflow-hidden overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
+                      <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                           <tr>
                             <th className="px-4 py-2 text-left text-xs font-medium text-gray-500">Date</th>
@@ -1541,7 +1541,7 @@ export default function ChauffeursPage() {
                             </tr>
                           ))}
                         </tbody>
-                      </table>
+                      </table></div>
                     </div>
                   </div>
                 )}

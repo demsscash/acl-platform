@@ -409,7 +409,7 @@ export default function LocationPage() {
                 <td class="amount">${Number(montantEstime).toLocaleString('fr-FR')} FCFA</td>
               </tr>
             </tbody>
-          </table>
+          </table></div>
         </div>
 
         ${bon.notes ? `
@@ -598,7 +598,7 @@ export default function LocationPage() {
     return (
       <div>
         <Breadcrumb />
-        <div className="flex justify-between items-center mb-6">
+        <div className="page-header">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bons de Location</h1>
             <p className="text-gray-600 dark:text-gray-400">Gestion des locations de véhicules</p>
@@ -613,7 +613,7 @@ export default function LocationPage() {
     <div>
       <Breadcrumb />
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="page-header">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bons de Location</h1>
           <p className="text-gray-600 dark:text-gray-400">Gestion des locations de véhicules</p>
@@ -801,7 +801,7 @@ export default function LocationPage() {
             {filteredAndSortedBons.length} résultat(s) trouvé(s)
           </div>
         )}
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="overflow-x-auto"><table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th
@@ -963,7 +963,7 @@ export default function LocationPage() {
               </tr>
             )}
           </tbody>
-        </table>
+        </table></div>
 
         {/* Pagination */}
         {filteredAndSortedBons.length > 0 && (
