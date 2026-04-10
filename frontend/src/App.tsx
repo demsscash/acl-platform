@@ -22,6 +22,9 @@ import PannesPage from './pages/PannesPage';
 import FournisseursPage from './pages/FournisseursPage';
 import ClientsPage from './pages/ClientsPage';
 import EntretienPage from './pages/EntretienPage';
+import OrdresReparationPage from './pages/OrdresReparationPage';
+import InterventionsPage from './pages/InterventionsPage';
+import AnalyseMaintenancePage from './pages/AnalyseMaintenancePage';
 import CaissesPage from './pages/CaissesPage';
 import ConfigPage from './pages/ConfigPage';
 import MainLayout from './layouts/MainLayout';
@@ -185,12 +188,42 @@ function AppContent() {
           }
         />
 
-        {/* Entretien - Selon permissions */}
+        {/* Entretien - Vidanges (nouvelle version) */}
         <Route
           path="/entretien"
           element={
             <ProtectedRoute requiredPermission="entretien">
               <EntretienPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Maintenance - Ordres de Réparation */}
+        <Route
+          path="/maintenance/ordres"
+          element={
+            <ProtectedRoute requiredPermission="entretien">
+              <OrdresReparationPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Maintenance - Interventions */}
+        <Route
+          path="/maintenance/interventions"
+          element={
+            <ProtectedRoute requiredPermission="entretien">
+              <InterventionsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Maintenance - Analyse KPI */}
+        <Route
+          path="/maintenance/analyse"
+          element={
+            <ProtectedRoute requiredPermission="entretien">
+              <AnalyseMaintenancePage />
             </ProtectedRoute>
           }
         />
