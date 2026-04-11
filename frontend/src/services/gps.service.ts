@@ -5,6 +5,7 @@ export interface TrackerGps {
   id: number;
   camionId?: number;
   camion?: any;
+  nom?: string;
   imei: string;
   simNumero?: string;
   simOperateur?: string;

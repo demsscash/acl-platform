@@ -67,6 +67,7 @@ export default function CaissesPage() {
   const [showMouvementModal, setShowMouvementModal] = useState(false);
   const [showVirementModal, setShowVirementModal] = useState(false);
   const [editingCaisse, setEditingCaisse] = useState<Caisse | null>(null);
+  const [editingMouvement, setEditingMouvement] = useState<MouvementCaisse | null>(null);
 
   useEscapeKey(() => {
     if (showCaisseModal) setShowCaisseModal(false);
@@ -173,6 +174,21 @@ export default function CaissesPage() {
     onError: (error: any) => toast.error(error?.response?.data?.message || 'Erreur lors de la suppression'),
   });
 
+  const updateMouvementMutation = useMutation({
+    mutationFn: ({ mouvementId, data }: { mouvementId: number; data: any }) =>
+      caissesService.updateMouvement(mouvementId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['caisses'] });
+      queryClient.invalidateQueries({ queryKey: ['caisses-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['caisses-mouvements'] });
+      setShowMouvementModal(false);
+      setEditingMouvement(null);
+      resetMouvementForm();
+      toast.success('Mouvement modifié');
+    },
+    onError: (error: any) => toast.error(error?.response?.data?.message || 'Erreur lors de la modification'),
+  });
+
   const virementMutation = useMutation({
     mutationFn: caissesService.virement,
     onSuccess: () => {
@@ -227,7 +243,40 @@ export default function CaissesPage() {
   const handleMouvementSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedCaisse) return;
-    addMouvementMutation.mutate({ caisseId: selectedCaisse.id, data: mouvementForm });
+    if (editingMouvement) {
+      // Update mode - backend ignores type/montant changes (forbid balance issues)
+      updateMouvementMutation.mutate({
+        mouvementId: editingMouvement.id,
+        data: {
+          nature: mouvementForm.nature,
+          beneficiaire: mouvementForm.beneficiaire,
+          modePaiement: mouvementForm.modePaiement,
+          numeroReference: mouvementForm.numeroReference,
+          date: mouvementForm.date,
+          notes: mouvementForm.notes,
+          referenceExterne: mouvementForm.referenceExterne,
+        },
+      });
+    } else {
+      addMouvementMutation.mutate({ caisseId: selectedCaisse.id, data: mouvementForm });
+    }
+  };
+
+  const handleEditMouvement = (m: MouvementCaisse) => {
+    setEditingMouvement(m);
+    setMouvementForm({
+      type: m.type,
+      nature: m.nature || '',
+      montant: Number(m.montant),
+      beneficiaire: m.beneficiaire || '',
+      modePaiement: m.modePaiement || '',
+      numeroReference: m.numeroReference || '',
+      date: new Date(m.date).toISOString().split('T')[0],
+      notes: m.notes || '',
+      referenceExterne: m.referenceExterne || '',
+      preuveUrl: m.preuveUrl || '',
+    });
+    setShowMouvementModal(true);
   };
 
   if (isLoading) {
@@ -433,9 +482,7 @@ export default function CaissesPage() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Référence</th>
                 <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Montant</th>
                 <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Preuve</th>
-                {selectedCaisse?.type === 'CENTRALE' && (
-                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
-                )}
+                <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -482,9 +529,18 @@ export default function CaissesPage() {
                       <span className="text-gray-300 dark:text-gray-600">-</span>
                     )}
                   </td>
-                  {selectedCaisse?.type === 'CENTRALE' && (
-                    <td className="px-4 py-3 text-center">
-                      {m.type !== 'VIREMENT_INTERNE' && (
+                  <td className="px-4 py-3 text-center">
+                    {m.type !== 'VIREMENT_INTERNE' && (
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => handleEditMouvement(m)}
+                          className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                          title="Modifier"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
                         <button
                           onClick={() => {
                             if (confirm(`Supprimer ce mouvement de ${Number(m.montant).toLocaleString('fr-FR')} F ?`)) {
@@ -498,14 +554,14 @@ export default function CaissesPage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
-                      )}
-                    </td>
-                  )}
+                      </div>
+                    )}
+                  </td>
                 </tr>
               ))}
               {(!mouvements || mouvements.length === 0) && (
                 <tr>
-                  <td colSpan={selectedCaisse?.type === 'CENTRALE' ? 9 : 8} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                  <td colSpan={9} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
                     Aucun mouvement enregistré
                   </td>
                 </tr>
@@ -585,8 +641,16 @@ export default function CaissesPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {mouvementForm.type === 'ENTREE' ? 'Nouvelle entrée' : 'Nouvelle sortie'} - {selectedCaisse.nom}
+              {editingMouvement
+                ? `Modifier ${mouvementForm.type === 'ENTREE' ? 'entrée' : 'sortie'}`
+                : mouvementForm.type === 'ENTREE' ? 'Nouvelle entrée' : 'Nouvelle sortie'}
+              {' - '}{selectedCaisse.nom}
             </h2>
+            {editingMouvement && (
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                Le type et le montant ne peuvent pas être modifiés. Pour les changer, supprimez et recréez le mouvement.
+              </p>
+            )}
             <form onSubmit={handleMouvementSubmit}>
               <div className="space-y-4">
                 <div>
@@ -594,7 +658,8 @@ export default function CaissesPage() {
                   <select
                     value={mouvementForm.type}
                     onChange={(e) => setMouvementForm({ ...mouvementForm, type: e.target.value as TypeMouvement })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    disabled={!!editingMouvement}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   >
                     <option value="ENTREE">Entrée</option>
                     <option value="SORTIE">Sortie</option>
@@ -617,7 +682,8 @@ export default function CaissesPage() {
                     type="number"
                     value={mouvementForm.montant}
                     onChange={(e) => setMouvementForm({ ...mouvementForm, montant: Number(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    disabled={!!editingMouvement}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                     required
                     min="1"
                   />
@@ -738,21 +804,27 @@ export default function CaissesPage() {
               <div className="flex justify-end gap-3 mt-6">
                 <button
                   type="button"
-                  onClick={() => { setShowMouvementModal(false); resetMouvementForm(); }}
+                  onClick={() => { setShowMouvementModal(false); setEditingMouvement(null); resetMouvementForm(); }}
                   className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
-                  disabled={addMouvementMutation.isPending || (mouvementForm.type === 'SORTIE' && mouvementForm.montant > Number(selectedCaisse?.soldeActuel || 0))}
+                  disabled={
+                    addMouvementMutation.isPending ||
+                    updateMouvementMutation.isPending ||
+                    (!editingMouvement && mouvementForm.type === 'SORTIE' && mouvementForm.montant > Number(selectedCaisse?.soldeActuel || 0))
+                  }
                   className={`px-4 py-2 rounded-lg font-medium disabled:opacity-50 ${
                     mouvementForm.type === 'ENTREE'
                       ? 'bg-green-600 text-white hover:bg-green-500'
                       : 'bg-red-600 text-white hover:bg-red-500'
                   }`}
                 >
-                  {addMouvementMutation.isPending ? 'Enregistrement...' : 'Enregistrer'}
+                  {addMouvementMutation.isPending || updateMouvementMutation.isPending
+                    ? 'Enregistrement...'
+                    : editingMouvement ? 'Modifier' : 'Enregistrer'}
                 </button>
               </div>
             </form>

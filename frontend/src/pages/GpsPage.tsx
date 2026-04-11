@@ -413,7 +413,7 @@ export default function GpsPage() {
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {trackers?.map((tracker) => (
                 <tr key={tracker.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td className="px-6 py-4 text-gray-900 dark:text-white">{(tracker as any).nom || '-'}</td>
+                  <td className="px-6 py-4 text-gray-900 dark:text-white">{tracker.nom || '-'}</td>
                   <td className="px-6 py-4 font-mono text-sm text-gray-900 dark:text-white">{tracker.imei}</td>
                   <td className="px-6 py-4 text-gray-900 dark:text-white">
                     {tracker.camion?.immatriculation || '-'}

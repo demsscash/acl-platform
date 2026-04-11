@@ -5,6 +5,7 @@ import { AlertesService } from './alertes.service';
 import { DocumentExpirationService, DocumentExpiration } from './document-expiration.service';
 import { StockAlertsService, StockAlert } from './stock-alerts.service';
 import { MaintenanceAlertsService, MaintenanceAlert } from './maintenance-alerts.service';
+import { PannesAlertsService, PanneAlert } from './pannes-alerts.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Alertes')
@@ -17,6 +18,7 @@ export class AlertesController {
     private readonly documentExpirationService: DocumentExpirationService,
     private readonly stockAlertsService: StockAlertsService,
     private readonly maintenanceAlertsService: MaintenanceAlertsService,
+    private readonly pannesAlertsService: PannesAlertsService,
   ) {}
 
   @Get()
@@ -109,5 +111,18 @@ export class AlertesController {
   @ApiOperation({ summary: 'Vérifier et créer alertes maintenance' })
   checkMaintenance(): Promise<{ upcoming: MaintenanceAlert[]; overdue: MaintenanceAlert[] }> {
     return this.maintenanceAlertsService.runCheck();
+  }
+
+  // Pannes alerts endpoints
+  @Get('pannes/non-resolues')
+  @ApiOperation({ summary: 'Pannes ouvertes depuis plus de 2 semaines' })
+  getUnresolvedPannes(): Promise<PanneAlert[]> {
+    return this.pannesAlertsService.getUnresolvedPannes();
+  }
+
+  @Post('pannes/check')
+  @ApiOperation({ summary: 'Vérifier et créer alertes pour les pannes non résolues' })
+  checkPannes(): Promise<{ alertesCreees: number; pannesNonResolues: PanneAlert[] }> {
+    return this.pannesAlertsService.runCheck();
   }
 }
