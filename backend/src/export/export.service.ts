@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { SortieStock, DotationCarburant, BonTransport, BonLocation, Panne, EntreeStock, ApprovisionnementCuve } from '../database/entities';
@@ -11,6 +11,8 @@ export interface ExportFilters {
 
 @Injectable()
 export class ExportService {
+  private readonly logger = new Logger(ExportService.name);
+
   constructor(
     @InjectRepository(SortieStock)
     private readonly sortieStockRepository: Repository<SortieStock>,
@@ -27,6 +29,15 @@ export class ExportService {
     @InjectRepository(ApprovisionnementCuve)
     private readonly approCuveRepository: Repository<ApprovisionnementCuve>,
   ) {}
+
+  private async safeRun<T>(label: string, fn: () => Promise<T[]>): Promise<T[]> {
+    try {
+      return await fn();
+    } catch (error: any) {
+      this.logger.error(`Export query "${label}" failed: ${error?.message || error}`, error?.stack);
+      return [];
+    }
+  }
 
   async getSortiesStock(filters: ExportFilters): Promise<SortieStock[]> {
     const where: any = {};
@@ -680,14 +691,17 @@ export class ExportService {
 
   // Summary statistics for export page
   async getExportStats(filters: ExportFilters): Promise<any> {
+    // Run each query independently so a single schema drift (e.g. a missing
+    // column) cannot zero-out the entire stats endpoint. Individual failures
+    // are logged and their counters fall back to empty arrays.
     const [sortiesStock, dotationsCarburant, bonsTransport, bonsLocation, pannes, entreesStock, approCuve] = await Promise.all([
-      this.getSortiesStock(filters),
-      this.getDotationsCarburant(filters),
-      this.getBonsTransport(filters),
-      this.getBonsLocation(filters),
-      this.getPannes(filters),
-      this.getEntreesStock(filters),
-      this.getApprovisionnementsCuve(filters),
+      this.safeRun('sortiesStock', () => this.getSortiesStock(filters)),
+      this.safeRun('dotationsCarburant', () => this.getDotationsCarburant(filters)),
+      this.safeRun('bonsTransport', () => this.getBonsTransport(filters)),
+      this.safeRun('bonsLocation', () => this.getBonsLocation(filters)),
+      this.safeRun('pannes', () => this.getPannes(filters)),
+      this.safeRun('entreesStock', () => this.getEntreesStock(filters)),
+      this.safeRun('approvisionnementsCuve', () => this.getApprovisionnementsCuve(filters)),
     ]);
 
     const totalCarburant = dotationsCarburant.reduce(
