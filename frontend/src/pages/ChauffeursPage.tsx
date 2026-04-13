@@ -983,11 +983,18 @@ export default function ChauffeursPage() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {editingChauffeur ? 'Modifier le chauffeur' : 'Nouveau chauffeur'}
-            </h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeModal}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                {editingChauffeur ? 'Modifier le chauffeur' : 'Nouveau chauffeur'}
+              </h2>
+              <button onClick={closeModal} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div>
@@ -1117,8 +1124,8 @@ export default function ChauffeursPage() {
 
       {/* Fiche d'information Modal */}
       {showHistorique && selectedChauffeur && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4 px-4">
-          <div className="bg-white rounded-lg w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto py-4 px-4" onClick={() => { setShowHistorique(false); setSelectedChauffeur(null); }}>
+          <div className="bg-white rounded-lg w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="p-6 border-b flex justify-between items-center bg-gradient-to-r from-yellow-500 to-yellow-400">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-2xl font-bold text-yellow-600">
@@ -1577,8 +1584,8 @@ export default function ChauffeursPage() {
 
       {/* Transport Detail Modal */}
       {selectedTransport && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
-          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]" onClick={() => setSelectedTransport(null)}>
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="bg-blue-600 px-6 py-4 flex justify-between items-center">
               <div>
                 <h2 className="text-xl font-bold text-white">Bon de Transport</h2>
@@ -1668,8 +1675,8 @@ export default function ChauffeursPage() {
 
       {/* Location Detail Modal */}
       {selectedLocation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
-          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]" onClick={() => setSelectedLocation(null)}>
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="bg-green-600 px-6 py-4 flex justify-between items-center">
               <div>
                 <h2 className="text-xl font-bold text-white">Bon de Location</h2>
@@ -1755,8 +1762,8 @@ export default function ChauffeursPage() {
 
       {/* Dotation Detail Modal */}
       {selectedDotation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
-          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]" onClick={() => setSelectedDotation(null)}>
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="bg-orange-500 px-6 py-4 flex justify-between items-center">
               <div>
                 <h2 className="text-xl font-bold text-white">Dotation Carburant</h2>
@@ -1830,8 +1837,8 @@ export default function ChauffeursPage() {
 
       {/* Panne Detail Modal */}
       {selectedPanne && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
-          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]" onClick={() => setSelectedPanne(null)}>
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="bg-red-600 px-6 py-4 flex justify-between items-center">
               <div>
                 <h2 className="text-xl font-bold text-white">Détail de la Panne</h2>
@@ -1966,9 +1973,16 @@ export default function ChauffeursPage() {
 
       {/* Confirmation Modal */}
       {confirmModal.show && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{confirmModal.title}</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]" onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} })}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{confirmModal.title}</h2>
+              <button onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} })} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <p className="text-gray-600 dark:text-gray-300 mb-6">{confirmModal.message}</p>
             <div className="flex justify-end gap-3">
               <button

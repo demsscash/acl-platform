@@ -338,12 +338,17 @@ export default function OrdresReparationPage() {
 
       {/* Create/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => { setShowModal(false); setSelectedMaintenance(null); resetForm(); }}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 {selectedMaintenance ? 'Modifier l\'ordre' : 'Nouvel ordre de reparation'}
               </h2>
+              <button onClick={() => { setShowModal(false); setSelectedMaintenance(null); resetForm(); }} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -487,8 +492,8 @@ export default function OrdresReparationPage() {
 
       {/* Detail Modal */}
       {showDetailModal && selectedMaintenance && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => { setShowDetailModal(false); setSelectedMaintenance(null); searchParams.delete('id'); setSearchParams(searchParams); }}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
               <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{selectedMaintenance.numero}</h2>

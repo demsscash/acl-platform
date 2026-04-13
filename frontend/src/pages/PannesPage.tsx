@@ -658,9 +658,16 @@ export default function PannesPage() {
 
       {/* Create Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Déclarer une panne</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => { setShowCreateModal(false); resetForm(); }}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Déclarer une panne</h2>
+              <button onClick={() => { setShowCreateModal(false); resetForm(); }} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <form onSubmit={handleCreate}>
               <div className="space-y-4">
                 <div>
@@ -789,16 +796,23 @@ export default function PannesPage() {
 
       {/* Detail Modal */}
       {showDetailModal && selectedPanne && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => { setShowDetailModal(false); setSelectedPanne(null); }}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">{selectedPanne.numeroPanne}</h2>
                 <p className="text-gray-600 dark:text-gray-400">{selectedPanne.camion?.immatriculation} - {selectedPanne.camion?.marque}</p>
               </div>
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatutBadge(selectedPanne.statut)}`}>
-                {getStatutLabel(selectedPanne.statut)}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatutBadge(selectedPanne.statut)}`}>
+                  {getStatutLabel(selectedPanne.statut)}
+                </span>
+                <button onClick={() => { setShowDetailModal(false); setSelectedPanne(null); }} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
@@ -953,8 +967,8 @@ export default function PannesPage() {
 
       {/* Repair Info Modal */}
       {showRepairModal && selectedPanne && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => { setShowRepairModal(false); setSelectedPanne(null); }}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-4">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Informations de réparation</h2>
@@ -1150,9 +1164,16 @@ export default function PannesPage() {
 
       {/* Confirmation Modal */}
       {confirmModal.show && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{confirmModal.title}</h3>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} })}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{confirmModal.title}</h3>
+              <button onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => {} })} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <p className="text-gray-600 dark:text-gray-400 mb-6">{confirmModal.message}</p>
             <div className="flex justify-end gap-3">
               <button
