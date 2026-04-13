@@ -565,6 +565,8 @@ export default function PneumatiquesPage() {
                     <option value="NEUF">Neuf</option>
                     <option value="BON">Bon</option>
                     <option value="USE">Usé</option>
+                    <option value="A_REMPLACER">À remplacer</option>
+                    <option value="REFORME">Réformé</option>
                   </select>
                 </div>
               </div>
