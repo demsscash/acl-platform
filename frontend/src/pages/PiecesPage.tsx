@@ -1182,11 +1182,18 @@ export default function PiecesPage() {
 
       {/* Modal Pièce */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {editingPiece ? 'Modifier la pièce' : 'Nouvelle pièce'}
-            </h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeModal}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                {editingPiece ? 'Modifier la pièce' : 'Nouvelle pièce'}
+              </h2>
+              <button onClick={closeModal} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div>
@@ -1274,9 +1281,16 @@ export default function PiecesPage() {
 
       {/* Modal Sortie */}
       {showSortieModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Nouvelle sortie de pièces</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeSortieModal}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Nouvelle sortie de pièces</h2>
+              <button onClick={closeSortieModal} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <form onSubmit={handleSubmitSortie}>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -1407,8 +1421,8 @@ export default function PiecesPage() {
 
       {/* Modal Détail Sortie */}
       {showDetailModal && selectedSortie && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowDetailModal(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Bon de sortie {selectedSortie.numeroBon}</h2>
@@ -1416,13 +1430,20 @@ export default function PiecesPage() {
                   {new Date(selectedSortie.dateSortie).toLocaleDateString('fr-FR')}
                 </p>
               </div>
-              <span className={`px-3 py-1 rounded text-sm ${selectedSortie.motif === 'PANNE' ? 'bg-red-100 text-red-800' :
-                selectedSortie.motif === 'REPARATION' ? 'bg-orange-100 text-orange-800' :
-                  selectedSortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
-                    'bg-gray-100 text-gray-800'
-                }`}>
-                {motifLabels[selectedSortie.motif]}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className={`px-3 py-1 rounded text-sm ${selectedSortie.motif === 'PANNE' ? 'bg-red-100 text-red-800' :
+                  selectedSortie.motif === 'REPARATION' ? 'bg-orange-100 text-orange-800' :
+                    selectedSortie.motif === 'MAINTENANCE' ? 'bg-blue-100 text-blue-800' :
+                      'bg-gray-100 text-gray-800'
+                  }`}>
+                  {motifLabels[selectedSortie.motif]}
+                </span>
+                <button onClick={() => setShowDetailModal(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
@@ -1500,9 +1521,16 @@ export default function PiecesPage() {
 
       {/* Modal Entrée */}
       {showEntreeModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Nouvelle entrée de stock</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeEntreeModal}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Nouvelle entrée de stock</h2>
+              <button onClick={closeEntreeModal} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <form onSubmit={handleSubmitEntree}>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -1673,8 +1701,8 @@ export default function PiecesPage() {
 
       {/* Modal Détail Entrée */}
       {showEntreeDetailModal && selectedEntree && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEntreeDetailModal(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Bon d'entrée {selectedEntree.numeroBon}</h2>
@@ -1682,12 +1710,19 @@ export default function PiecesPage() {
                   {new Date(selectedEntree.dateEntree).toLocaleDateString('fr-FR')}
                 </p>
               </div>
-              <span className={`px-3 py-1 rounded text-sm ${selectedEntree.typeEntree === 'ACHAT' ? 'bg-green-100 text-green-800' :
-                selectedEntree.typeEntree === 'RETOUR' ? 'bg-orange-100 text-orange-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
-                {typeEntreeLabels[selectedEntree.typeEntree]}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className={`px-3 py-1 rounded text-sm ${selectedEntree.typeEntree === 'ACHAT' ? 'bg-green-100 text-green-800' :
+                  selectedEntree.typeEntree === 'RETOUR' ? 'bg-orange-100 text-orange-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                  {typeEntreeLabels[selectedEntree.typeEntree]}
+                </span>
+                <button onClick={() => setShowEntreeDetailModal(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-6">
@@ -1781,11 +1816,18 @@ export default function PiecesPage() {
 
       {/* Modal Fournisseur */}
       {showFournisseurModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {editingFournisseur ? 'Modifier le fournisseur' : 'Nouveau fournisseur'}
-            </h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeFournisseurModal}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                {editingFournisseur ? 'Modifier le fournisseur' : 'Nouveau fournisseur'}
+              </h2>
+              <button onClick={closeFournisseurModal} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <form onSubmit={handleSubmitFournisseur}>
               <div className="space-y-4">
                 <div>
@@ -1862,9 +1904,16 @@ export default function PiecesPage() {
 
       {/* Modal Inventaire */}
       {showInventaireModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Ajustement de stock (Inventaire)</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeInventaireModal}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Ajustement de stock (Inventaire)</h2>
+              <button onClick={closeInventaireModal} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <form onSubmit={handleSubmitInventaire}>
               <div className="space-y-4">
                 <div>
@@ -1937,9 +1986,16 @@ export default function PiecesPage() {
 
       {/* Confirmation Modal */}
       {confirmModal.show && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{confirmModal.title}</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]" onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } })}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{confirmModal.title}</h2>
+              <button onClick={() => setConfirmModal({ show: false, title: '', message: '', onConfirm: () => { } })} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <p className="text-gray-600 dark:text-gray-300 mb-6">{confirmModal.message}</p>
             <div className="flex justify-end gap-3">
               <button

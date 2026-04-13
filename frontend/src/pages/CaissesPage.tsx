@@ -573,11 +573,18 @@ export default function CaissesPage() {
 
       {/* Caisse Modal */}
       {showCaisseModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {editingCaisse ? 'Modifier la caisse' : 'Nouvelle caisse'}
-            </h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => { setShowCaisseModal(false); setEditingCaisse(null); }}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                {editingCaisse ? 'Modifier la caisse' : 'Nouvelle caisse'}
+              </h2>
+              <button onClick={() => { setShowCaisseModal(false); setEditingCaisse(null); }} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <form onSubmit={handleCaisseSubmit}>
               <div className="space-y-4">
                 <div>
@@ -638,14 +645,21 @@ export default function CaissesPage() {
 
       {/* Mouvement Modal */}
       {showMouvementModal && selectedCaisse && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              {editingMouvement
-                ? `Modifier ${mouvementForm.type === 'ENTREE' ? 'entrée' : 'sortie'}`
-                : mouvementForm.type === 'ENTREE' ? 'Nouvelle entrée' : 'Nouvelle sortie'}
-              {' - '}{selectedCaisse.nom}
-            </h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => { setShowMouvementModal(false); setEditingMouvement(null); }}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                {editingMouvement
+                  ? `Modifier ${mouvementForm.type === 'ENTREE' ? 'entrée' : 'sortie'}`
+                  : mouvementForm.type === 'ENTREE' ? 'Nouvelle entrée' : 'Nouvelle sortie'}
+                {' - '}{selectedCaisse.nom}
+              </h2>
+              <button onClick={() => { setShowMouvementModal(false); setEditingMouvement(null); }} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             {editingMouvement && (
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
                 Le type et le montant ne peuvent pas être modifiés. Pour les changer, supprimez et recréez le mouvement.
@@ -834,9 +848,16 @@ export default function CaissesPage() {
 
       {/* Virement Modal - CENTRALE → LOGISTIQUE uniquement */}
       {showVirementModal && caisseCentrale && caisseLogistique && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-lg">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Alimenter la Caisse Logistique</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => { setShowVirementModal(false); }}>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Alimenter la Caisse Logistique</h2>
+              <button onClick={() => { setShowVirementModal(false); }} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               Transfert de fonds de la Caisse Centrale vers la Caisse Logistique
             </p>
